@@ -1,8 +1,8 @@
 import React from 'react';
-import { FAB, Portal, PaperProvider } from "react-native-paper";
-import {StyleSheet} from "react-native";
+import { FAB, Portal } from "react-native-paper";
 
-const AddWaterIntake = (props) => {
+
+const AddWaterIntake = () => {
     const [state, setState] = React.useState({ open: false });
 
     const onStateChange = ({ open }) => setState({open});

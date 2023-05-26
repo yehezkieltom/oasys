@@ -1,10 +1,7 @@
-import {StyleSheet, Text, SafeAreaView, View, ScrollView, ViewComponent, ScrollViewBase} from "react-native";
+import {StyleSheet, Text, View} from "react-native";
 import {Provider} from "react-native-paper";
 
 import AddWaterIntake from "../components/addWaterIntake";
-import Colors from "../constants/Colors";
-import IconPlus from "../assets/Plus.js";
-
 
 const homeScreen = () => {
     return (
