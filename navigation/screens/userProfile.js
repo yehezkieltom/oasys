@@ -3,6 +3,7 @@ import {useState} from "react";
 import homeScreen from "./homeScreen";
 import {Divider, List} from "react-native-paper";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import * as React from "react";
 
 
 
@@ -13,20 +14,20 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
     return (
      <View style={styles.wholeScreen}>
         <View style={styles.logoScreen}>
-            <Text style={styles.titleOasys} >oasys</Text>
+            <Text style={styles.titleOasys} >oas<Text style={styles.innerText}>y</Text>s</Text>
         </View>
         <View style={styles.buttonS}>
             <Divider bold/>
             <View>
                 <List.Item onPress={() => console.log('App Settings pressed!')}
                            titleStyle={styles.textAppHealth} title="App Settings"
-                           left={(props) => <Icon {...props} size={35} name="cog" />}/>
+                           left={(props) => <Icon {...props}  size={35} name="cog" />}/>
             </View>
             <Divider bold/>
             <View>
                 <List.Item onPress={() => console.log('Health Details pressed!')}
                            titleStyle={styles.textAppHealth} title="Health Details"
-                           left={(props) => <Icon {...props} size={35} name="clipboard-pulse" /> }/>
+                           left={(props) => <Icon {...props}  size={35} name="clipboard-pulse" /> }/>
             </View>
             <Divider bold/>
 
@@ -39,6 +40,10 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 export default userProfile;
 const styles= StyleSheet.create ( {
+
+    innerText: {
+        color: '#19A7CE',
+    },
 
     textAppHealth: {
       color: 'black',
