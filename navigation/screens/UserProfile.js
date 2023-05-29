@@ -1,6 +1,4 @@
 import {Button, Pressable, StyleSheet, Text, TextInput, TouchableHighlight, TouchableOpacity, View} from "react-native";
-import {useState} from "react";
-import homeScreen from "./homeScreen";
 import {Divider, List} from "react-native-paper";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as React from "react";
@@ -10,7 +8,7 @@ import * as React from "react";
 
 
 
- function userProfile() {
+ function userProfile({navigation}) {
     return (
      <View style={styles.wholeScreen}>
         <View style={styles.logoScreen}>
@@ -25,7 +23,7 @@ import * as React from "react";
             </View>
             <Divider bold/>
             <View>
-                <List.Item onPress={() => console.log('Health Details pressed!')}
+                <List.Item onPress={() => navigation.navigate('HealthDetails')}
                            titleStyle={styles.textAppHealth} title="Health Details"
                            left={(props) => <Icon {...props}  size={35} name="clipboard-pulse" /> }/>
             </View>
@@ -36,6 +34,10 @@ import * as React from "react";
         </View>
      </View>
     )
+}
+
+const HealthDetails = ({navigation, route}) => {
+     return <Text> This is {route.params.name}'s profile</Text>
 }
 
 export default userProfile;
