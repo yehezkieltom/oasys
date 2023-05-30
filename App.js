@@ -3,15 +3,15 @@ import {AppRegistry, SafeAreaView, StyleSheet} from 'react-native';
 import { PaperProvider } from "react-native-paper";
 import { name as appName } from './app.json';
 
-import HomeScreen from './screens/homeScreen'
 import {StatusBar} from "expo-status-bar";
+import MainContainer from "./MainContainer";
 
 export default function App() {
     return (
         <PaperProvider>
             <SafeAreaView style={styles.container}>
                 <StatusBar style="auto" />
-                <HomeScreen />
+                <MainContainer />
             </SafeAreaView>
         </PaperProvider>
     );
