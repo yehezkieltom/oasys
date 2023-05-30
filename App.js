@@ -4,7 +4,7 @@ import { PaperProvider } from "react-native-paper";
 import { name as appName } from './app.json';
 
 import {StatusBar} from "expo-status-bar";
-import MainContainer from "./MainContainer";
+import MainContainer from "./navigation/MainContainer";
 
 export default function App() {
     return (

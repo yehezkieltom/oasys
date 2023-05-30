@@ -1,7 +1,7 @@
 import {StyleSheet, Text, View} from "react-native";
 import {Provider} from "react-native-paper";
 
-import AddWaterIntake from "../components/addWaterIntake";
+import AddWaterIntake from "../../components/addWaterIntake";
 
 const HomeScreen = () => {
     return (

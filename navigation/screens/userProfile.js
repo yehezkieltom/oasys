@@ -1,6 +1,4 @@
 import {Button, Pressable, StyleSheet, Text, TextInput, TouchableHighlight, TouchableOpacity, View} from "react-native";
-import {useState} from "react";
-import homeScreen from "./homeScreen";
 import {Divider, List} from "react-native-paper";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as React from "react";
