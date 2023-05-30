@@ -17,7 +17,7 @@ function healthDetails () {
     );
 
     const [range, setRange] = useState('150 min');
-    const [value, setValue] = useState(0);
+    const [value, setValue] = useState(0); //gender
     const items = [ {label: "Male", value: 0}, {label: "Female", value: 1}]
     const [age, setAge] = useState('22');
     const [alcohol, setAlcohol] = useState('3.0');
@@ -74,7 +74,7 @@ function healthDetails () {
         </View>
         <View style={styles.attributeContainer}>
             <Text style={styles.attributeName}>
-                How much physical activity do you in a week
+                How much physical activities do you do in a week
             </Text>
             <View>
                 <Slider
