@@ -13,12 +13,13 @@ const AddWaterIntake = () => {
                 <FAB.Group
                     open={open}
                     visible
+                    color='#fff'
                     icon={open ? 'close' : 'plus' }
                     actions={[
                         {
                             icon: 'cup',
                             label: 'add manually',
-                            onPress: () => console.log('\'add manually\' pressed!')
+                            onPress: () => console.log('\'add manually\' pressed!'),
                         },
                         {
                             icon: 'countertop',
@@ -28,6 +29,9 @@ const AddWaterIntake = () => {
                     ]}
                     onStateChange={onStateChange}
                     onPress={() => {}}
+                    fabStyle={{
+                        backgroundColor: '#19A7CE'
+                    }}
                 />
             </Portal>
     );

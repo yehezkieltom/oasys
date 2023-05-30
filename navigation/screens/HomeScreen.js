@@ -1,23 +1,14 @@
-import {StyleSheet, Text, View} from "react-native";
+import {ImageBackground, StyleSheet, Text, View} from "react-native";
 import {Provider} from "react-native-paper";
 
 import AddWaterIntake from "../../components/addWaterIntake";
+import StockImage from "../../assets/successful-man-giving-glass-water-600w-444674071.webp";
 
 const HomeScreen = () => {
     return (
         <Provider>
             <View style={styles.fullScreenView}>
-                <Text>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut a metus et nulla dapibus ultricies in at augue. Etiam eu porta ante. Praesent id metus iaculis, pulvinar purus at, tristique nisl. Phasellus pulvinar interdum sem. Integer in faucibus nisi. Nam efficitur elementum dapibus. Pellentesque lobortis in neque eget dictum. Sed aliquet vitae nisl non dignissim. Duis lobortis ante at pretium congue.
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut a metus et nulla dapibus ultricies in at augue. Etiam eu porta ante. Praesent id metus iaculis, pulvinar purus at, tristique nisl. Phasellus pulvinar interdum sem. Integer in faucibus nisi. Nam efficitur elementum dapibus. Pellentesque lobortis in neque eget dictum. Sed aliquet vitae nisl non dignissim. Duis lobortis ante at pretium congue.
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut a metus et nulla dapibus ultricies in at augue. Etiam eu porta ante. Praesent id metus iaculis, pulvinar purus at, tristique nisl. Phasellus pulvinar interdum sem. Integer in faucibus nisi. Nam efficitur elementum dapibus. Pellentesque lobortis in neque eget dictum. Sed aliquet vitae nisl non dignissim. Duis lobortis ante at pretium congue.
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut a metus et nulla dapibus ultricies in at augue. Etiam eu porta ante. Praesent id metus iaculis, pulvinar purus at, tristique nisl. Phasellus pulvinar interdum sem. Integer in faucibus nisi. Nam efficitur elementum dapibus. Pellentesque lobortis in neque eget dictum. Sed aliquet vitae nisl non dignissim. Duis lobortis ante at pretium congue.
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut a metus et nulla dapibus ultricies in at augue. Etiam eu porta ante. Praesent id metus iaculis, pulvinar purus at, tristique nisl. Phasellus pulvinar interdum sem. Integer in faucibus nisi. Nam efficitur elementum dapibus. Pellentesque lobortis in neque eget dictum. Sed aliquet vitae nisl non dignissim. Duis lobortis ante at pretium congue.
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut a metus et nulla dapibus ultricies in at augue. Etiam eu porta ante. Praesent id metus iaculis, pulvinar purus at, tristique nisl. Phasellus pulvinar interdum sem. Integer in faucibus nisi. Nam efficitur elementum dapibus. Pellentesque lobortis in neque eget dictum. Sed aliquet vitae nisl non dignissim. Duis lobortis ante at pretium congue.
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut a metus et nulla dapibus ultricies in at augue. Etiam eu porta ante. Praesent id metus iaculis, pulvinar purus at, tristique nisl. Phasellus pulvinar interdum sem. Integer in faucibus nisi. Nam efficitur elementum dapibus. Pellentesque lobortis in neque eget dictum. Sed aliquet vitae nisl non dignissim. Duis lobortis ante at pretium congue.
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut a metus et nulla dapibus ultricies in at augue. Etiam eu porta ante. Praesent id metus iaculis, pulvinar purus at, tristique nisl. Phasellus pulvinar interdum sem. Integer in faucibus nisi. Nam efficitur elementum dapibus. Pellentesque lobortis in neque eget dictum. Sed aliquet vitae nisl non dignissim. Duis lobortis ante at pretium congue.
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut a metus et nulla dapibus ultricies in at augue. Etiam eu porta ante. Praesent id metus iaculis, pulvinar purus at, tristique nisl. Phasellus pulvinar interdum sem. Integer in faucibus nisi. Nam efficitur elementum dapibus. Pellentesque lobortis in neque eget dictum. Sed aliquet vitae nisl non dignissim. Duis lobortis ante at pretium congue.
-                </Text>
+                <ImageBackground source={StockImage} resizeMode="cover" style={styles.image}></ImageBackground>
             </View>
 
             <View style={styles.fabContainer}>
@@ -39,7 +30,12 @@ const styles = StyleSheet.create({
         bottom: 16,
         right: 16,
         zIndex: 1,
+    },
+    image: {
+        flex: 1,
+        justifyContent: 'center',
     }
 });
+
 
 export default HomeScreen;

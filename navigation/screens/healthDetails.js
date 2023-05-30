@@ -24,9 +24,9 @@ function healthDetails () {
 
     return (
     <View style={styles.container}>
-        <View style={styles.logoScreen}>
-            <Text style={styles.titleOasys} >oas<Text style={styles.innerText}>y</Text>s</Text>
-        </View>
+        {/*<View style={styles.logoScreen}>*/}
+        {/*    <Text style={styles.titleOasys} >oas<Text style={styles.innerText}>y</Text>s</Text>*/}
+        {/*</View>*/}
         <ScrollView>
         <View style={styles.attributeContainer}>
             <Text style={styles.attributeName}>
