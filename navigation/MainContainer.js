@@ -7,6 +7,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import HomeScreen from './screens/HomeScreen';
 import userProfile from "./screens/userProfile";
 import HealthDetails from "./screens/healthDetails";
+import NfcScreen from "./screens/nfcScreen";
 
 const homeName = "Home";
 const profileName = "Profile";
@@ -61,6 +62,12 @@ const MainContainer = () => (
                 name='Health Details'
                 component={HealthDetails}
             />
+            <Stack.Screen
+                name='Dispense Water'
+                component={NfcScreen}
+                options={{ headerShown: false }}
+            />
+
         </Stack.Navigator>
     </NavigationContainer>
 )

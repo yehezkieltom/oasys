@@ -1,12 +1,15 @@
 import React from 'react';
 import { FAB, Portal } from "react-native-paper";
-
+import {useNavigation} from '@react-navigation/native'
 
 const AddWaterIntake = () => {
+
+
+
     const [state, setState] = React.useState({ open: false });
 
     const onStateChange = ({ open }) => setState({open});
-
+    const navigation = useNavigation();
     const { open } = state;
     return (
             <Portal>
@@ -24,7 +27,7 @@ const AddWaterIntake = () => {
                         {
                             icon: 'countertop',
                             label: 'dispense water',
-                            onPress: () => console.log('\'dispense water\' pressed!')
+                            onPress: () => navigation.navigate('Dispense Water')
                         },
                     ]}
                     onStateChange={onStateChange}
