@@ -29,6 +29,11 @@ const AddWaterIntake = () => {
                             label: 'dispense water',
                             onPress: () => navigation.navigate('Dispense Water')
                         },
+                        {
+                            icon: 'water-pump',
+                            label: 'refill water tank',
+                            onPress: () => console.log('\'refill water tank\' pressed!'),
+                        },
                     ]}
                     onStateChange={onStateChange}
                     onPress={() => {}}

@@ -3,7 +3,7 @@ import {View, StyleSheet, Text, ScrollView, TextInput} from 'react-native';
 import RadioForm from 'react-native-simple-radio-button';
 import  {useState} from 'react';
 import CheckBox from "react-native-check-box";
-import {Slider} from "react-native-elements";
+import Slider from "@react-native-community/slider";
 
 
 
@@ -16,18 +16,35 @@ function healthDetails () {
         diarrhea: false,}
     );
 
-    const [range, setRange] = useState('150 min');
+    const minAge = 1;
+    const maxAge = 122;
+
+    const minAlcohol = 0.0;
+    const maxAlcohol = 15.0;
+
+    const [range, setRange] = useState('5 ');
     const [value, setValue] = useState(0); //gender
     const items = [ {label: "Male", value: 0}, {label: "Female", value: 1}]
     const [age, setAge] = useState('22');
     const [alcohol, setAlcohol] = useState('3.0');
+
+
+    function handleChangeAge(typedAge) {
+        const checkedAge = Math.max(minAge, Math.min(maxAge, Number(typedAge)));
+        setAge(checkedAge);
+    }
+
+    function handleChangeAlcohol(typedAlcohol) {
+        const checkedAlcohol = Math.max(minAlcohol, Math.min(maxAlcohol, Number(typedAlcohol)));
+        setAlcohol(checkedAlcohol);
+    }
 
     return (
     <View style={styles.container}>
         {/*<View style={styles.logoScreen}>*/}
         {/*    <Text style={styles.titleOasys} >oas<Text style={styles.innerText}>y</Text>s</Text>*/}
         {/*</View>*/}
-        <ScrollView>
+        <ScrollView overScrollMode="never">
         <View style={styles.attributeContainer}>
             <Text style={styles.attributeName}>
                 Select your Gender
@@ -45,10 +62,13 @@ function healthDetails () {
                 Enter your Age
             </Text>
             <View style={styles.inputTextContainer} >
-                <TextInput style={styles.input}
+                <TextInput
+
+                           style={styles.input}
                            textAlign='center'
                            placeholder='22'
-                           onChangeText={(value) => setAge(value)}
+                           maxLength={3}
+                           onChangeText={(value) => handleChangeAge(value)}
                            underlineColorAndroid="#19A7CE"
                            keyboardType='number-pad'/>
                 <Text>
@@ -64,7 +84,7 @@ function healthDetails () {
                 <TextInput style={styles.input}
                            textAlign='center'
                            placeholder='3.0'
-                           onChangeText={(value) => setAlcohol(value)}
+                           onChangeText={(value) => handleChangeAlcohol(value)}
                            underlineColorAndroid="#19A7CE"
                            keyboardType='number-pad'/>
                 <Text >
@@ -78,18 +98,24 @@ function healthDetails () {
             </Text>
             <View>
                 <Slider
-                style={{width:250, height: 40}}
+                style={{width:315, height: 40}}
                 minimumValue={0}
-                maximumValue={300}
+                maximumValue={10}
                 minimumTrackTintColor= '#19A7CE'
                 maximumTrackTintColor='#000'
                 thumbTintColor='#19A7CE'
-                value={150}
+                value={5}
+                step={1}
                 onValueChange={value => setRange(parseInt(value))}
                 />
-                <Text>
-                    You are doing <Text style={styles.innerText}> {range}</Text> of physical activities in a week
-                </Text>
+                <View style={styles.sliderLabel}>
+                    <Text style={styles.sliderLabelLeft}>
+                        Light
+                    </Text>
+                    <Text style={styles.sliderLabelRight}>
+                        Intense
+                    </Text>
+                </View>
             </View>
         </View>
         <View style={styles.attributeContainer}>
@@ -124,6 +150,11 @@ healthDetails.title = 'Health Details';
 export default healthDetails;
 
 const styles = StyleSheet.create({
+
+    sliderLabel: {
+        justifyContent: 'space-between',
+        flexDirection: 'row',
+    },
 
     innerText: {
         color: '#19A7CE',
