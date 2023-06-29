@@ -6,7 +6,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import HomeScreen from './screens/HomeScreen';
 import userProfile from "./screens/userProfile";
-import HealthDetails from "./screens/healthDetails";
+import HealthDetailsForm from "./screens/healthDetailsForm";
+import HealthDetails from "./screens/healthDetailsView";
 import NfcScreen from "./screens/nfcScreen";
 
 const homeName = "Home";
@@ -61,6 +62,11 @@ const MainContainer = () => (
             <Stack.Screen
                 name='Health Details'
                 component={HealthDetails}
+
+            />
+            <Stack.Screen
+                name='Health Details Form'
+                component={HealthDetailsForm}
             />
             <Stack.Screen
                 name='Dispense Water'

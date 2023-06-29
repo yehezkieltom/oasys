@@ -4,17 +4,23 @@ import RadioForm from 'react-native-simple-radio-button';
 import  {useState} from 'react';
 import CheckBox from "react-native-check-box";
 import Slider from "@react-native-community/slider";
+import { Button } from 'react-native';
+import DatePicker from 'react-native-date-picker';
 
 
 
 
 
-function healthDetails () {
+
+function healthDetailsForm () {
     const [isChecked, setIsChecked] = useState({
         pregnant: false,
         breastfeeding: false,
         diarrhea: false,}
     );
+
+    const [date, setDate] = useState(new Date());
+    const [open, setOpen] = useState(false);
 
     const minAge = 1;
     const maxAge = 122;
@@ -59,22 +65,23 @@ function healthDetails () {
         </View>
         <View style={styles.attributeContainer}>
             <Text style={styles.attributeName}>
-                Enter your Age
+                Enter your date of birth
             </Text>
-            <View style={styles.inputTextContainer} >
-                <TextInput
-
-                           style={styles.input}
-                           textAlign='center'
-                           placeholder='22'
-                           maxLength={3}
-                           onChangeText={(value) => handleChangeAge(value)}
-                           underlineColorAndroid="#19A7CE"
-                           keyboardType='number-pad'/>
-                <Text>
-                    Your age is: <Text style={styles.innerText}> {age}</Text>
-                </Text>
-            </View>
+            <DatePicker
+                modal
+                open={open}
+                date={date}
+                maximumDate={"2023-06-29"}
+                minimumDate={"1907-03-04"}
+                androidVariant={"nativeAndroid"}
+                onConfirm={(date) => {
+                    setOpen(false)
+                    setDate(date)
+                }}
+                onCancel={() => {
+                    setOpen(false)
+                }}
+            />
         </View>
         <View style={styles.attributeContainer}>
             <Text style={styles.attributeName}>
@@ -145,9 +152,9 @@ function healthDetails () {
 
     )    
 }
-healthDetails.title = 'Health Details';
+healthDetailsForm.title = 'Health Details';
 
-export default healthDetails;
+export default healthDetailsForm;
 
 const styles = StyleSheet.create({
 
