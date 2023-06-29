@@ -12,7 +12,7 @@ import DatePicker from 'react-native-date-picker';
 
 
 
-function healthDetailsForm () {
+function healthDetailsForm() {
     const [isChecked, setIsChecked] = useState({
         pregnant: false,
         breastfeeding: false,
@@ -67,12 +67,13 @@ function healthDetailsForm () {
             <Text style={styles.attributeName}>
                 Enter your date of birth
             </Text>
+            <Button title="Open" onPress={() => setOpen(true)} />
             <DatePicker
                 modal
                 open={open}
                 date={date}
-                maximumDate={"2023-06-29"}
-                minimumDate={"1907-03-04"}
+                maximumDate={new Date("2023-06-29")}
+                minimumDate={new Date("1907-03-04")}
                 androidVariant={"nativeAndroid"}
                 onConfirm={(date) => {
                     setOpen(false)
