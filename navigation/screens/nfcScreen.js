@@ -2,15 +2,25 @@ import {Button, Pressable, StyleSheet, Text, TextInput, TouchableHighlight, Touc
 import {Divider, List} from "react-native-paper";
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import * as React from "react";
+import NfcManager, { NfcEvents, NfcTech } from 'react-native-nfc-manager';
+import {useState, useEffect} from "react";
 
+NfcManager.start();
 
-
-
-
-
-
+const readTag = async () => {
+    try {
+        await NfcManager.requestTechnology(NfcTech.Ndef);
+        const tag = await NfcManager.getTag();
+        console.warn("Tag found!", tag);
+    } catch (ex) {
+        console.warn("Oops!", ex);
+    } finally {
+        NfcManager.cancelTechnologyRequest
+    }
+}
 
 function nfcScreen({navigation}) {
+    readTag();
     return (
         <View style={styles.wholeScreen}>
             <Text style={styles.title}>

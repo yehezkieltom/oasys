@@ -1,0 +1,1474 @@
+Index: app.json
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>{\r\n  \"expo\": {\r\n    \"name\": \"Oasys\",\r\n    \"slug\": \"Oasys\",\r\n    \"version\": \"1.0.0\",\r\n    \"orientation\": \"portrait\",\r\n    \"icon\": \"./assets/icon.png\",\r\n    \"userInterfaceStyle\": \"light\",\r\n    \"splash\": {\r\n      \"image\": \"./assets/splash.png\",\r\n      \"resizeMode\": \"contain\",\r\n      \"backgroundColor\": \"#ffffff\"\r\n    },\r\n    \"assetBundlePatterns\": [\r\n      \"**/*\"\r\n    ],\r\n    \"ios\": {\r\n      \"supportsTablet\": true\r\n    },\r\n    \"android\": {\r\n      \"adaptiveIcon\": {\r\n        \"foregroundImage\": \"./assets/adaptive-icon.png\",\r\n        \"backgroundColor\": \"#ffffff\"\r\n      },\r\n    },\r\n    \"web\": {\r\n      \"favicon\": \"./assets/favicon.png\"\r\n    }\r\n  }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app.json b/app.json
+--- a/app.json	(revision 1d4805ee94a2ec704ac9e3c21c883837462a8101)
++++ b/app.json	(date 1687871179589)
+@@ -22,6 +22,7 @@
+         "foregroundImage": "./assets/adaptive-icon.png",
+         "backgroundColor": "#ffffff"
+       },
++      "package": "com.oasys.Oasys"
+     },
+     "web": {
+       "favicon": "./assets/favicon.png"
+Index: navigation/screens/nfcScreen.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import {Button, Pressable, StyleSheet, Text, TextInput, TouchableHighlight, TouchableOpacity, View} from \"react-native\";\r\nimport {Divider, List} from \"react-native-paper\";\r\nimport Icon from 'react-native-vector-icons/MaterialIcons';\r\nimport * as React from \"react\";\r\nimport NfcManager, { NfcEvents }from 'react-native-nfc-manager';\r\nimport {useState, useEffect} from \"react\";\r\n\r\n\r\n\r\n\r\n\r\nconst readTag = async () => {\r\n    await NfcManager.registerTagEvent();\r\n}\r\n\r\nfunction nfcScreen({navigation}) {\r\n    const [hasNfc, setHasNfc] = useState(null);\r\n    useEffect(() => {\r\n        NfcManager.setEventListener(NfcEvents.DiscoverTag, (tag) => {\r\n            console.log('tag found');\r\n        })\r\n\r\n        return () => {\r\n            NfcManager.setEventListener(NfcEvents.DiscoverTag, null);\r\n        }\r\n    }, [])\r\n    if (!hasNfc) {\r\n        return (\r\n            <View style={styles.wholeScreen}>\r\n                <Text style={styles.title}>NFC not supported</Text>\r\n            </View>\r\n        );\r\n    }\r\n    return (\r\n        <View style={styles.wholeScreen}>\r\n            <Text style={styles.title}>\r\n                Hold near reader\r\n            </Text>\r\n            <Icon style={styles.iconStyle}\r\n                name='contactless'\r\n                color='#fff'\r\n                size={150}\r\n                marginTop={12}\r\n            />\r\n        </View>\r\n    )\r\n}\r\n\r\nexport default nfcScreen;\r\nconst styles= StyleSheet.create ( {\r\n\r\n    iconStyle:{\r\n        borderRadius:10,\r\n    },\r\n\r\n\r\n\r\n\r\n\r\n    wholeScreen: {\r\n        flex: 1,\r\n        backgroundColor: '#19A7CE',\r\n        justifyContent: 'center',\r\n        alignItems:'center',\r\n    },\r\n\r\n    logoScreen: {\r\n        backgroundColor: 'white',\r\n        alignItems: 'center',\r\n        paddingTop:45,\r\n        paddingBottom: 15,\r\n    },\r\n\r\n    title: {\r\n        color: 'white',\r\n        fontSize: 32,\r\n        fontWeight: 600,\r\n    },\r\n\r\n    textInput: {\r\n        borderWidth: 1,\r\n        borderColor: '#cccccc',\r\n        width: '70%',\r\n        marginRight: 8,\r\n        padding: 8\r\n    },\r\n});
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/navigation/screens/nfcScreen.js b/navigation/screens/nfcScreen.js
+--- a/navigation/screens/nfcScreen.js	(revision 1d4805ee94a2ec704ac9e3c21c883837462a8101)
++++ b/navigation/screens/nfcScreen.js	(date 1688028697935)
+@@ -2,35 +2,25 @@
+ import {Divider, List} from "react-native-paper";
+ import Icon from 'react-native-vector-icons/MaterialIcons';
+ import * as React from "react";
+-import NfcManager, { NfcEvents }from 'react-native-nfc-manager';
++import NfcManager, { NfcEvents, NfcTech } from 'react-native-nfc-manager';
+ import {useState, useEffect} from "react";
+ 
+-
+-
+-
++NfcManager.start();
+ 
+ const readTag = async () => {
+-    await NfcManager.registerTagEvent();
++    try {
++        await NfcManager.requestTechnology(NfcTech.Ndef);
++        const tag = await NfcManager.getTag();
++        console.warn("Tag found!", tag);
++    } catch (ex) {
++        console.warn("Oops!", ex);
++    } finally {
++        NfcManager.cancelTechnologyRequest
++    }
+ }
+ 
+ function nfcScreen({navigation}) {
+-    const [hasNfc, setHasNfc] = useState(null);
+-    useEffect(() => {
+-        NfcManager.setEventListener(NfcEvents.DiscoverTag, (tag) => {
+-            console.log('tag found');
+-        })
+-
+-        return () => {
+-            NfcManager.setEventListener(NfcEvents.DiscoverTag, null);
+-        }
+-    }, [])
+-    if (!hasNfc) {
+-        return (
+-            <View style={styles.wholeScreen}>
+-                <Text style={styles.title}>NFC not supported</Text>
+-            </View>
+-        );
+-    }
++    readTag();
+     return (
+         <View style={styles.wholeScreen}>
+             <Text style={styles.title}>
+Index: AndroidManifest.xml
+===================================================================
+diff --git a/AndroidManifest.xml b/AndroidManifest.xml
+deleted file mode 100644
+--- a/AndroidManifest.xml	(revision 1d4805ee94a2ec704ac9e3c21c883837462a8101)
++++ /dev/null	(revision 1d4805ee94a2ec704ac9e3c21c883837462a8101)
+@@ -1,2 +0,0 @@
+-<uses-feature android:name="android.hardware.nfc" android:required="true" />
+-<uses-permission android:name="android.permission.NFC" />
+\ No newline at end of file
+Index: android/app/src/main/java/com/oasys/Oasys/MainApplication.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/android/app/src/main/java/com/oasys/Oasys/MainApplication.java b/android/app/src/main/java/com/oasys/Oasys/MainApplication.java
+new file mode 100644
+--- /dev/null	(date 1687871203129)
++++ b/android/app/src/main/java/com/oasys/Oasys/MainApplication.java	(date 1687871203129)
+@@ -0,0 +1,76 @@
++package com.oasys.Oasys;
++
++import android.app.Application;
++import android.content.res.Configuration;
++import androidx.annotation.NonNull;
++
++import com.facebook.react.PackageList;
++import com.facebook.react.ReactApplication;
++import com.facebook.react.ReactNativeHost;
++import com.facebook.react.ReactPackage;
++import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint;
++import com.facebook.react.defaults.DefaultReactNativeHost;
++import com.facebook.soloader.SoLoader;
++
++import expo.modules.ApplicationLifecycleDispatcher;
++import expo.modules.ReactNativeHostWrapper;
++
++import java.util.List;
++
++public class MainApplication extends Application implements ReactApplication {
++
++  private final ReactNativeHost mReactNativeHost =
++    new ReactNativeHostWrapper(this, new DefaultReactNativeHost(this) {
++      @Override
++      public boolean getUseDeveloperSupport() {
++        return BuildConfig.DEBUG;
++      }
++
++      @Override
++      protected List<ReactPackage> getPackages() {
++        @SuppressWarnings("UnnecessaryLocalVariable")
++        List<ReactPackage> packages = new PackageList(this).getPackages();
++        // Packages that cannot be autolinked yet can be added manually here, for example:
++        // packages.add(new MyReactNativePackage());
++        return packages;
++      }
++
++      @Override
++      protected String getJSMainModuleName() {
++        return "index";
++      }
++
++      @Override
++      protected boolean isNewArchEnabled() {
++        return BuildConfig.IS_NEW_ARCHITECTURE_ENABLED;
++      }
++
++      @Override
++      protected Boolean isHermesEnabled() {
++        return BuildConfig.IS_HERMES_ENABLED;
++      }
++  });
++
++  @Override
++  public ReactNativeHost getReactNativeHost() {
++    return mReactNativeHost;
++  }
++
++  @Override
++  public void onCreate() {
++    super.onCreate();
++    SoLoader.init(this, /* native exopackage */ false);
++    if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {
++      // If you opted-in for the New Architecture, we load the native entry point for this app.
++      DefaultNewArchitectureEntryPoint.load();
++    }
++    ReactNativeFlipper.initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
++    ApplicationLifecycleDispatcher.onApplicationCreate(this);
++  }
++
++  @Override
++  public void onConfigurationChanged(@NonNull Configuration newConfig) {
++    super.onConfigurationChanged(newConfig);
++    ApplicationLifecycleDispatcher.onConfigurationChanged(this, newConfig);
++  }
++}
+Index: android/app/src/debug/java/com/oasys/Oasys/ReactNativeFlipper.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/android/app/src/debug/java/com/oasys/Oasys/ReactNativeFlipper.java b/android/app/src/debug/java/com/oasys/Oasys/ReactNativeFlipper.java
+new file mode 100644
+--- /dev/null	(date 1687871203120)
++++ b/android/app/src/debug/java/com/oasys/Oasys/ReactNativeFlipper.java	(date 1687871203120)
+@@ -0,0 +1,75 @@
++/**
++ * Copyright (c) Meta Platforms, Inc. and affiliates.
++ *
++ * <p>This source code is licensed under the MIT license found in the LICENSE file in the root
++ * directory of this source tree.
++ */
++package com.oasys.Oasys;
++
++import android.content.Context;
++import com.facebook.flipper.android.AndroidFlipperClient;
++import com.facebook.flipper.android.utils.FlipperUtils;
++import com.facebook.flipper.core.FlipperClient;
++import com.facebook.flipper.plugins.crashreporter.CrashReporterPlugin;
++import com.facebook.flipper.plugins.databases.DatabasesFlipperPlugin;
++import com.facebook.flipper.plugins.fresco.FrescoFlipperPlugin;
++import com.facebook.flipper.plugins.inspector.DescriptorMapping;
++import com.facebook.flipper.plugins.inspector.InspectorFlipperPlugin;
++import com.facebook.flipper.plugins.network.FlipperOkhttpInterceptor;
++import com.facebook.flipper.plugins.network.NetworkFlipperPlugin;
++import com.facebook.flipper.plugins.sharedpreferences.SharedPreferencesFlipperPlugin;
++import com.facebook.react.ReactInstanceEventListener;
++import com.facebook.react.ReactInstanceManager;
++import com.facebook.react.bridge.ReactContext;
++import com.facebook.react.modules.network.NetworkingModule;
++import okhttp3.OkHttpClient;
++
++/**
++ * Class responsible of loading Flipper inside your React Native application. This is the debug
++ * flavor of it. Here you can add your own plugins and customize the Flipper setup.
++ */
++public class ReactNativeFlipper {
++  public static void initializeFlipper(Context context, ReactInstanceManager reactInstanceManager) {
++    if (FlipperUtils.shouldEnableFlipper(context)) {
++      final FlipperClient client = AndroidFlipperClient.getInstance(context);
++
++      client.addPlugin(new InspectorFlipperPlugin(context, DescriptorMapping.withDefaults()));
++      client.addPlugin(new DatabasesFlipperPlugin(context));
++      client.addPlugin(new SharedPreferencesFlipperPlugin(context));
++      client.addPlugin(CrashReporterPlugin.getInstance());
++
++      NetworkFlipperPlugin networkFlipperPlugin = new NetworkFlipperPlugin();
++      NetworkingModule.setCustomClientBuilder(
++          new NetworkingModule.CustomClientBuilder() {
++            @Override
++            public void apply(OkHttpClient.Builder builder) {
++              builder.addNetworkInterceptor(new FlipperOkhttpInterceptor(networkFlipperPlugin));
++            }
++          });
++      client.addPlugin(networkFlipperPlugin);
++      client.start();
++
++      // Fresco Plugin needs to ensure that ImagePipelineFactory is initialized
++      // Hence we run if after all native modules have been initialized
++      ReactContext reactContext = reactInstanceManager.getCurrentReactContext();
++      if (reactContext == null) {
++        reactInstanceManager.addReactInstanceEventListener(
++            new ReactInstanceEventListener() {
++              @Override
++              public void onReactContextInitialized(ReactContext reactContext) {
++                reactInstanceManager.removeReactInstanceEventListener(this);
++                reactContext.runOnNativeModulesQueueThread(
++                    new Runnable() {
++                      @Override
++                      public void run() {
++                        client.addPlugin(new FrescoFlipperPlugin());
++                      }
++                    });
++              }
++            });
++      } else {
++        client.addPlugin(new FrescoFlipperPlugin());
++      }
++    }
++  }
++}
+Index: android/app/src/release/java/com/oasys/Oasys/ReactNativeFlipper.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/android/app/src/release/java/com/oasys/Oasys/ReactNativeFlipper.java b/android/app/src/release/java/com/oasys/Oasys/ReactNativeFlipper.java
+new file mode 100644
+--- /dev/null	(date 1687871203132)
++++ b/android/app/src/release/java/com/oasys/Oasys/ReactNativeFlipper.java	(date 1687871203132)
+@@ -0,0 +1,20 @@
++/**
++ * Copyright (c) Meta Platforms, Inc. and affiliates.
++ *
++ * <p>This source code is licensed under the MIT license found in the LICENSE file in the root
++ * directory of this source tree.
++ */
++package com.oasys.Oasys;
++
++import android.content.Context;
++import com.facebook.react.ReactInstanceManager;
++
++/**
++ * Class responsible of loading Flipper inside your React Native application. This is the release
++ * flavor of it so it's empty as we don't want to load Flipper.
++ */
++public class ReactNativeFlipper {
++  public static void initializeFlipper(Context context, ReactInstanceManager reactInstanceManager) {
++    // Do nothing as we don't want to initialize Flipper on Release.
++  }
++}
+Index: android/gradle/wrapper/gradle-wrapper.properties
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/android/gradle/wrapper/gradle-wrapper.properties b/android/gradle/wrapper/gradle-wrapper.properties
+new file mode 100644
+--- /dev/null	(date 499162500000)
++++ b/android/gradle/wrapper/gradle-wrapper.properties	(date 499162500000)
+@@ -0,0 +1,5 @@
++distributionBase=GRADLE_USER_HOME
++distributionPath=wrapper/dists
++distributionUrl=https\://services.gradle.org/distributions/gradle-7.5.1-all.zip
++zipStoreBase=GRADLE_USER_HOME
++zipStorePath=wrapper/dists
+Index: android/app/src/main/AndroidManifest.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/android/app/src/main/AndroidManifest.xml b/android/app/src/main/AndroidManifest.xml
+new file mode 100644
+--- /dev/null	(date 1687954376390)
++++ b/android/app/src/main/AndroidManifest.xml	(date 1687954376390)
+@@ -0,0 +1,36 @@
++<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.oasys.Oasys">
++  <uses-permission android:name="android.permission.INTERNET"/>
++  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
++  <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
++  <uses-permission android:name="android.permission.VIBRATE"/>
++  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
++  <uses-permission android:name="android.permission.NFC" />
++  <uses-feature android:name="android.hardware.nfc" android:required="true" />
++  <queries>
++    <intent>
++      <action android:name="android.intent.action.VIEW"/>
++      <category android:name="android.intent.category.BROWSABLE"/>
++      <data android:scheme="https"/>
++    </intent>
++  </queries>
++  <application android:name=".MainApplication" android:label="@string/app_name" android:icon="@mipmap/ic_launcher" android:roundIcon="@mipmap/ic_launcher_round" android:allowBackup="true" android:theme="@style/AppTheme" android:usesCleartextTraffic="true">
++    <meta-data android:name="expo.modules.updates.ENABLED" android:value="true"/>
++    <meta-data android:name="expo.modules.updates.EXPO_SDK_VERSION" android:value="48.0.0"/>
++    <meta-data android:name="expo.modules.updates.EXPO_UPDATES_CHECK_ON_LAUNCH" android:value="ALWAYS"/>
++    <meta-data android:name="expo.modules.updates.EXPO_UPDATES_LAUNCH_WAIT_MS" android:value="0"/>
++    <meta-data android:name="expo.modules.updates.EXPO_UPDATE_URL" android:value="https://exp.host/@anonymous/Oasys"/>
++    <activity android:name=".MainActivity" android:label="@string/app_name" android:configChanges="keyboard|keyboardHidden|orientation|screenSize|uiMode" android:launchMode="singleTask" android:windowSoftInputMode="adjustResize" android:theme="@style/Theme.App.SplashScreen" android:exported="true" android:screenOrientation="portrait">
++      <intent-filter>
++        <action android:name="android.intent.action.MAIN"/>
++        <category android:name="android.intent.category.LAUNCHER"/>
++      </intent-filter>
++      <intent-filter>
++        <action android:name="android.intent.action.VIEW"/>
++        <category android:name="android.intent.category.DEFAULT"/>
++        <category android:name="android.intent.category.BROWSABLE"/>
++        <data android:scheme="com.oasys.Oasys"/>
++      </intent-filter>
++    </activity>
++    <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" android:exported="false"/>
++  </application>
++</manifest>
+\ No newline at end of file
+Index: android/app/src/debug/AndroidManifest.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/android/app/src/debug/AndroidManifest.xml b/android/app/src/debug/AndroidManifest.xml
+new file mode 100644
+--- /dev/null	(date 499162500000)
++++ b/android/app/src/debug/AndroidManifest.xml	(date 499162500000)
+@@ -0,0 +1,7 @@
++<manifest xmlns:android="http://schemas.android.com/apk/res/android"
++    xmlns:tools="http://schemas.android.com/tools">
++
++    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
++
++    <application android:usesCleartextTraffic="true" tools:targetApi="28" tools:ignore="GoogleAppIndexingWarning" />
++</manifest>
+Index: android/app/src/main/res/values/colors.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/android/app/src/main/res/values/colors.xml b/android/app/src/main/res/values/colors.xml
+new file mode 100644
+--- /dev/null	(date 1687871207427)
++++ b/android/app/src/main/res/values/colors.xml	(date 1687871207427)
+@@ -0,0 +1,6 @@
++<resources>
++  <color name="splashscreen_background">#ffffff</color>
++  <color name="iconBackground">#ffffff</color>
++  <color name="colorPrimary">#023c69</color>
++  <color name="colorPrimaryDark">#ffffff</color>
++</resources>
+\ No newline at end of file
+Index: android/app/src/main/res/values/strings.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/android/app/src/main/res/values/strings.xml b/android/app/src/main/res/values/strings.xml
+new file mode 100644
+--- /dev/null	(date 1687871207441)
++++ b/android/app/src/main/res/values/strings.xml	(date 1687871207441)
+@@ -0,0 +1,5 @@
++<resources>
++  <string name="app_name">Oasys</string>
++  <string name="expo_splash_screen_resize_mode" translatable="false">contain</string>
++  <string name="expo_splash_screen_status_bar_translucent" translatable="false">false</string>
++</resources>
+\ No newline at end of file
+Index: android/app/src/main/res/values/styles.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/android/app/src/main/res/values/styles.xml b/android/app/src/main/res/values/styles.xml
+new file mode 100644
+--- /dev/null	(date 1687871207443)
++++ b/android/app/src/main/res/values/styles.xml	(date 1687871207443)
+@@ -0,0 +1,17 @@
++<resources xmlns:tools="http://schemas.android.com/tools">
++  <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
++    <item name="android:textColor">@android:color/black</item>
++    <item name="android:editTextStyle">@style/ResetEditText</item>
++    <item name="android:editTextBackground">@drawable/rn_edit_text_material</item>
++    <item name="colorPrimary">@color/colorPrimary</item>
++    <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
++  </style>
++  <style name="ResetEditText" parent="@android:style/Widget.EditText">
++    <item name="android:padding">0dp</item>
++    <item name="android:textColorHint">#c8c8c8</item>
++    <item name="android:textColor">@android:color/black</item>
++  </style>
++  <style name="Theme.App.SplashScreen" parent="AppTheme">
++    <item name="android:windowBackground">@drawable/splashscreen</item>
++  </style>
++</resources>
+\ No newline at end of file
+Index: android/app/src/main/res/drawable/rn_edit_text_material.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/android/app/src/main/res/drawable/rn_edit_text_material.xml b/android/app/src/main/res/drawable/rn_edit_text_material.xml
+new file mode 100644
+--- /dev/null	(date 499162500000)
++++ b/android/app/src/main/res/drawable/rn_edit_text_material.xml	(date 499162500000)
+@@ -0,0 +1,36 @@
++<?xml version="1.0" encoding="utf-8"?>
++<!-- Copyright (C) 2014 The Android Open Source Project
++
++     Licensed under the Apache License, Version 2.0 (the "License");
++     you may not use this file except in compliance with the License.
++     You may obtain a copy of the License at
++
++          http://www.apache.org/licenses/LICENSE-2.0
++
++     Unless required by applicable law or agreed to in writing, software
++     distributed under the License is distributed on an "AS IS" BASIS,
++     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++     See the License for the specific language governing permissions and
++     limitations under the License.
++-->
++<inset xmlns:android="http://schemas.android.com/apk/res/android"
++       android:insetLeft="@dimen/abc_edit_text_inset_horizontal_material"
++       android:insetRight="@dimen/abc_edit_text_inset_horizontal_material"
++       android:insetTop="@dimen/abc_edit_text_inset_top_material"
++       android:insetBottom="@dimen/abc_edit_text_inset_bottom_material">
++
++    <selector>
++        <!-- 
++          This file is a copy of abc_edit_text_material (https://bit.ly/3k8fX7I).
++          The item below with state_pressed="false" and state_focused="false" causes a NullPointerException.
++          NullPointerException:tempt to invoke virtual method 'android.graphics.drawable.Drawable android.graphics.drawable.Drawable$ConstantState.newDrawable(android.content.res.Resources)'
++
++          <item android:state_pressed="false" android:state_focused="false" android:drawable="@drawable/abc_textfield_default_mtrl_alpha"/>
++
++          For more info, see https://bit.ly/3CdLStv (react-native/pull/29452) and https://bit.ly/3nxOMoR.
++        -->
++        <item android:state_enabled="false" android:drawable="@drawable/abc_textfield_default_mtrl_alpha"/>
++        <item android:drawable="@drawable/abc_textfield_activated_mtrl_alpha"/>
++    </selector>
++
++</inset>
+Index: android/app/src/main/res/drawable/splashscreen.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/android/app/src/main/res/drawable/splashscreen.xml b/android/app/src/main/res/drawable/splashscreen.xml
+new file mode 100644
+--- /dev/null	(date 1687871205246)
++++ b/android/app/src/main/res/drawable/splashscreen.xml	(date 1687871205246)
+@@ -0,0 +1,3 @@
++<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
++  <item android:drawable="@color/splashscreen_background"/>
++</layer-list>
+\ No newline at end of file
+Index: package.json
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>{\r\n  \"name\": \"oasys\",\r\n  \"version\": \"1.0.0\",\r\n  \"main\": \"node_modules/expo/AppEntry.js\",\r\n  \"scripts\": {\r\n    \"start\": \"expo start\",\r\n    \"android\": \"expo start --android\",\r\n    \"ios\": \"expo start --ios\",\r\n    \"web\": \"expo start --web\",\r\n    \"postinstall\": \"patch-package\"\r\n  },\r\n  \"dependencies\": {\r\n    \"@react-navigation/bottom-tabs\": \"^6.5.7\",\r\n    \"@react-navigation/native\": \"^6.1.6\",\r\n    \"@react-navigation/native-stack\": \"^6.9.12\",\r\n    \"deprecated-react-native-prop-types\": \"^4.1.0\",\r\n    \"expo\": \"~48.0.15\",\r\n    \"expo-status-bar\": \"~1.4.4\",\r\n    \"patch-package\": \"^7.0.0\",\r\n    \"react\": \"18.2.0\",\r\n    \"react-native\": \"0.71.8\",\r\n    \"react-native-check-box\": \"^2.1.7\",\r\n    \"react-native-elements\": \"^3.4.3\",\r\n    \"react-native-nfc-manager\": \"^3.14.5\",\r\n    \"react-native-paper\": \"^5.8.0\",\r\n    \"react-native-safe-area-context\": \"4.5.0\",\r\n    \"react-native-simple-radio-button\": \"^2.7.4\",\r\n    \"react-native-svg\": \"13.4.0\",\r\n    \"react-native-vector-icons\": \"^9.2.0\",\r\n    \"react-native-webp-format\": \"^1.2.0\",\r\n    \"react-navigation\": \"^4.4.4\"\r\n  },\r\n  \"devDependencies\": {\r\n    \"@babel/core\": \"^7.20.0\",\r\n    \"@svgr/babel-plugin-transform-react-native-svg\": \"^8.0.0\"\r\n  },\r\n  \"private\": true\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/package.json b/package.json
+--- a/package.json	(revision 1d4805ee94a2ec704ac9e3c21c883837462a8101)
++++ b/package.json	(date 1688027583217)
+@@ -1,29 +1,33 @@
+ {
+   "name": "oasys",
+   "version": "1.0.0",
+-  "main": "node_modules/expo/AppEntry.js",
+   "scripts": {
+-    "start": "expo start",
+-    "android": "expo start --android",
+-    "ios": "expo start --ios",
++    "start": "expo start --dev-client",
++    "android": "expo run:android",
++    "ios": "expo run:ios",
+     "web": "expo start --web",
+     "postinstall": "patch-package"
+   },
+   "dependencies": {
++    "@react-native-community/masked-view": "^0.1.11",
+     "@react-navigation/bottom-tabs": "^6.5.7",
+-    "@react-navigation/native": "^6.1.6",
++    "@react-navigation/native": "^6.1.7",
+     "@react-navigation/native-stack": "^6.9.12",
+     "deprecated-react-native-prop-types": "^4.1.0",
+-    "expo": "~48.0.15",
++    "expo": "~48.0.18",
++    "expo-splash-screen": "~0.18.2",
+     "expo-status-bar": "~1.4.4",
+     "patch-package": "^7.0.0",
+     "react": "18.2.0",
+     "react-native": "0.71.8",
+     "react-native-check-box": "^2.1.7",
+     "react-native-elements": "^3.4.3",
++    "react-native-gesture-handler": "^2.12.0",
+     "react-native-nfc-manager": "^3.14.5",
+     "react-native-paper": "^5.8.0",
+-    "react-native-safe-area-context": "4.5.0",
++    "react-native-reanimated": "^3.3.0",
++    "react-native-safe-area-context": "^4.5.0",
++    "react-native-screens": "^3.22.0",
+     "react-native-simple-radio-button": "^2.7.4",
+     "react-native-svg": "13.4.0",
+     "react-native-vector-icons": "^9.2.0",
+Index: android/app/src/main/res/values-night/colors.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/android/app/src/main/res/values-night/colors.xml b/android/app/src/main/res/values-night/colors.xml
+new file mode 100644
+--- /dev/null	(date 1687871207444)
++++ b/android/app/src/main/res/values-night/colors.xml	(date 1687871207444)
+@@ -0,0 +1,1 @@
++<resources/>
+\ No newline at end of file
+Index: metro.config.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/metro.config.js b/metro.config.js
+new file mode 100644
+--- /dev/null	(date 499162500000)
++++ b/metro.config.js	(date 499162500000)
+@@ -0,0 +1,4 @@
++// Learn more https://docs.expo.io/guides/customizing-metro
++const { getDefaultConfig } = require('expo/metro-config');
++
++module.exports = getDefaultConfig(__dirname);
+Index: index.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/index.js b/index.js
+new file mode 100644
+--- /dev/null	(date 499162500000)
++++ b/index.js	(date 499162500000)
+@@ -0,0 +1,8 @@
++import { registerRootComponent } from 'expo';
++
++import App from './App';
++
++// registerRootComponent calls AppRegistry.registerComponent('main', () => App);
++// It also ensures that whether you load the app in Expo Go or in a native build,
++// the environment is set up appropriately
++registerRootComponent(App);
+Index: android/.gitignore
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/android/.gitignore b/android/.gitignore
+new file mode 100644
+--- /dev/null	(date 499162500000)
++++ b/android/.gitignore	(date 499162500000)
+@@ -0,0 +1,15 @@
++# OSX
++#
++.DS_Store
++
++# Android/IntelliJ
++#
++build/
++.idea
++.gradle
++local.properties
++*.iml
++*.hprof
++
++# Bundle artifacts
++*.jsbundle
+Index: android/build.gradle
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/android/build.gradle b/android/build.gradle
+new file mode 100644
+--- /dev/null	(date 1687871207449)
++++ b/android/build.gradle	(date 1687871207449)
+@@ -0,0 +1,42 @@
++// Top-level build file where you can add configuration options common to all sub-projects/modules.
++
++buildscript {
++    ext {
++        buildToolsVersion = findProperty('android.buildToolsVersion') ?: '33.0.0'
++        minSdkVersion = Integer.parseInt(findProperty('android.minSdkVersion') ?: '21')
++        compileSdkVersion = Integer.parseInt(findProperty('android.compileSdkVersion') ?: '33')
++        targetSdkVersion = Integer.parseInt(findProperty('android.targetSdkVersion') ?: '33')
++        if (findProperty('android.kotlinVersion')) {
++            kotlinVersion = findProperty('android.kotlinVersion')
++        }
++        frescoVersion = findProperty('expo.frescoVersion') ?: '2.5.0'
++
++        // We use NDK 23 which has both M1 support and is the side-by-side NDK version from AGP.
++        ndkVersion = "23.1.7779620"
++    }
++    repositories {
++        google()
++        mavenCentral()
++    }
++    dependencies {
++        classpath('com.android.tools.build:gradle:7.4.1')
++        classpath('com.facebook.react:react-native-gradle-plugin')
++    }
++}
++
++allprojects {
++    repositories {
++        maven {
++            // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
++            url(new File(['node', '--print', "require.resolve('react-native/package.json')"].execute(null, rootDir).text.trim(), '../android'))
++        }
++        maven {
++            // Android JSC is installed from npm
++            url(new File(['node', '--print', "require.resolve('jsc-android/package.json')"].execute(null, rootDir).text.trim(), '../dist'))
++        }
++
++        google()
++        mavenCentral()
++        maven { url 'https://www.jitpack.io' }
++    }
++}
+Index: android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml b/android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml
+new file mode 100644
+--- /dev/null	(date 1687871205199)
++++ b/android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml	(date 1687871205199)
+@@ -0,0 +1,5 @@
++<?xml version="1.0" encoding="utf-8"?>
++<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
++    <background android:drawable="@color/iconBackground"/>
++    <foreground android:drawable="@mipmap/ic_launcher_foreground"/>
++</adaptive-icon>
+\ No newline at end of file
+Index: android/gradle.properties
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/android/gradle.properties b/android/gradle.properties
+new file mode 100644
+--- /dev/null	(date 1687871207447)
++++ b/android/gradle.properties	(date 1687871207447)
+@@ -0,0 +1,53 @@
++# Project-wide Gradle settings.
++
++# IDE (e.g. Android Studio) users:
++# Gradle settings configured through the IDE *will override*
++# any settings specified in this file.
++
++# For more details on how to configure your build environment visit
++# http://www.gradle.org/docs/current/userguide/build_environment.html
++
++# Specifies the JVM arguments used for the daemon process.
++# The setting is particularly useful for tweaking memory settings.
++# Default value: -Xmx512m -XX:MaxMetaspaceSize=256m
++org.gradle.jvmargs=-Xmx2048m -XX:MaxMetaspaceSize=512m
++
++# When configured, Gradle will run in incubating parallel mode.
++# This option should only be used with decoupled projects. More details, visit
++# http://www.gradle.org/docs/current/userguide/multi_project_builds.html#sec:decoupled_projects
++# org.gradle.parallel=true
++
++# AndroidX package structure to make it clearer which packages are bundled with the
++# Android operating system, and which are packaged with your app's APK
++# https://developer.android.com/topic/libraries/support-library/androidx-rn
++android.useAndroidX=true
++
++# Automatically convert third-party libraries to use AndroidX
++android.enableJetifier=true
++
++# Version of flipper SDK to use with React Native
++FLIPPER_VERSION=0.125.0
++
++# Use this property to specify which architecture you want to build.
++# You can also override it from the CLI using
++# ./gradlew <task> -PreactNativeArchitectures=x86_64
++reactNativeArchitectures=armeabi-v7a,arm64-v8a,x86,x86_64
++
++# Use this property to enable support to the new architecture.
++# This will allow you to use TurboModules and the Fabric render in
++# your application. You should enable this flag either if you want
++# to write custom TurboModules/Fabric components OR use libraries that
++# are providing them.
++newArchEnabled=false
++
++# The hosted JavaScript engine
++# Supported values: expo.jsEngine = "hermes" | "jsc"
++expo.jsEngine=hermes
++
++# Enable GIF support in React Native images (~200 B increase)
++expo.gif.enabled=true
++# Enable webp support in React Native images (~85 KB increase)
++expo.webp.enabled=true
++# Enable animated webp support (~3.4 MB increase)
++# Disabled by default because iOS doesn't support animated webp
++expo.webp.animated=false
+Index: android/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/android/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml b/android/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml
+new file mode 100644
+--- /dev/null	(date 1687871205199)
++++ b/android/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml	(date 1687871205199)
+@@ -0,0 +1,5 @@
++<?xml version="1.0" encoding="utf-8"?>
++<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
++    <background android:drawable="@color/iconBackground"/>
++    <foreground android:drawable="@mipmap/ic_launcher_foreground"/>
++</adaptive-icon>
+\ No newline at end of file
+Index: android/gradlew
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/android/gradlew b/android/gradlew
+new file mode 100644
+--- /dev/null	(date 499162500000)
++++ b/android/gradlew	(date 499162500000)
+@@ -0,0 +1,240 @@
++#!/bin/sh
++
++#
++# Copyright © 2015-2021 the original authors.
++#
++# Licensed under the Apache License, Version 2.0 (the "License");
++# you may not use this file except in compliance with the License.
++# You may obtain a copy of the License at
++#
++#      https://www.apache.org/licenses/LICENSE-2.0
++#
++# Unless required by applicable law or agreed to in writing, software
++# distributed under the License is distributed on an "AS IS" BASIS,
++# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++# See the License for the specific language governing permissions and
++# limitations under the License.
++#
++
++##############################################################################
++#
++#   Gradle start up script for POSIX generated by Gradle.
++#
++#   Important for running:
++#
++#   (1) You need a POSIX-compliant shell to run this script. If your /bin/sh is
++#       noncompliant, but you have some other compliant shell such as ksh or
++#       bash, then to run this script, type that shell name before the whole
++#       command line, like:
++#
++#           ksh Gradle
++#
++#       Busybox and similar reduced shells will NOT work, because this script
++#       requires all of these POSIX shell features:
++#         * functions;
++#         * expansions «$var», «${var}», «${var:-default}», «${var+SET}»,
++#           «${var#prefix}», «${var%suffix}», and «$( cmd )»;
++#         * compound commands having a testable exit status, especially «case»;
++#         * various built-in commands including «command», «set», and «ulimit».
++#
++#   Important for patching:
++#
++#   (2) This script targets any POSIX shell, so it avoids extensions provided
++#       by Bash, Ksh, etc; in particular arrays are avoided.
++#
++#       The "traditional" practice of packing multiple parameters into a
++#       space-separated string is a well documented source of bugs and security
++#       problems, so this is (mostly) avoided, by progressively accumulating
++#       options in "$@", and eventually passing that to Java.
++#
++#       Where the inherited environment variables (DEFAULT_JVM_OPTS, JAVA_OPTS,
++#       and GRADLE_OPTS) rely on word-splitting, this is performed explicitly;
++#       see the in-line comments for details.
++#
++#       There are tweaks for specific operating systems such as AIX, CygWin,
++#       Darwin, MinGW, and NonStop.
++#
++#   (3) This script is generated from the Groovy template
++#       https://github.com/gradle/gradle/blob/master/subprojects/plugins/src/main/resources/org/gradle/api/internal/plugins/unixStartScript.txt
++#       within the Gradle project.
++#
++#       You can find Gradle at https://github.com/gradle/gradle/.
++#
++##############################################################################
++
++# Attempt to set APP_HOME
++
++# Resolve links: $0 may be a link
++app_path=$0
++
++# Need this for daisy-chained symlinks.
++while
++    APP_HOME=${app_path%"${app_path##*/}"}  # leaves a trailing /; empty if no leading path
++    [ -h "$app_path" ]
++do
++    ls=$( ls -ld "$app_path" )
++    link=${ls#*' -> '}
++    case $link in             #(
++      /*)   app_path=$link ;; #(
++      *)    app_path=$APP_HOME$link ;;
++    esac
++done
++
++APP_HOME=$( cd "${APP_HOME:-./}" && pwd -P ) || exit
++
++APP_NAME="Gradle"
++APP_BASE_NAME=${0##*/}
++
++# Add default JVM options here. You can also use JAVA_OPTS and GRADLE_OPTS to pass JVM options to this script.
++DEFAULT_JVM_OPTS='"-Xmx64m" "-Xms64m"'
++
++# Use the maximum available, or set MAX_FD != -1 to use that value.
++MAX_FD=maximum
++
++warn () {
++    echo "$*"
++} >&2
++
++die () {
++    echo
++    echo "$*"
++    echo
++    exit 1
++} >&2
++
++# OS specific support (must be 'true' or 'false').
++cygwin=false
++msys=false
++darwin=false
++nonstop=false
++case "$( uname )" in                #(
++  CYGWIN* )         cygwin=true  ;; #(
++  Darwin* )         darwin=true  ;; #(
++  MSYS* | MINGW* )  msys=true    ;; #(
++  NONSTOP* )        nonstop=true ;;
++esac
++
++CLASSPATH=$APP_HOME/gradle/wrapper/gradle-wrapper.jar
++
++
++# Determine the Java command to use to start the JVM.
++if [ -n "$JAVA_HOME" ] ; then
++    if [ -x "$JAVA_HOME/jre/sh/java" ] ; then
++        # IBM's JDK on AIX uses strange locations for the executables
++        JAVACMD=$JAVA_HOME/jre/sh/java
++    else
++        JAVACMD=$JAVA_HOME/bin/java
++    fi
++    if [ ! -x "$JAVACMD" ] ; then
++        die "ERROR: JAVA_HOME is set to an invalid directory: $JAVA_HOME
++
++Please set the JAVA_HOME variable in your environment to match the
++location of your Java installation."
++    fi
++else
++    JAVACMD=java
++    which java >/dev/null 2>&1 || die "ERROR: JAVA_HOME is not set and no 'java' command could be found in your PATH.
++
++Please set the JAVA_HOME variable in your environment to match the
++location of your Java installation."
++fi
++
++# Increase the maximum file descriptors if we can.
++if ! "$cygwin" && ! "$darwin" && ! "$nonstop" ; then
++    case $MAX_FD in #(
++      max*)
++        MAX_FD=$( ulimit -H -n ) ||
++            warn "Could not query maximum file descriptor limit"
++    esac
++    case $MAX_FD in  #(
++      '' | soft) :;; #(
++      *)
++        ulimit -n "$MAX_FD" ||
++            warn "Could not set maximum file descriptor limit to $MAX_FD"
++    esac
++fi
++
++# Collect all arguments for the java command, stacking in reverse order:
++#   * args from the command line
++#   * the main class name
++#   * -classpath
++#   * -D...appname settings
++#   * --module-path (only if needed)
++#   * DEFAULT_JVM_OPTS, JAVA_OPTS, and GRADLE_OPTS environment variables.
++
++# For Cygwin or MSYS, switch paths to Windows format before running java
++if "$cygwin" || "$msys" ; then
++    APP_HOME=$( cygpath --path --mixed "$APP_HOME" )
++    CLASSPATH=$( cygpath --path --mixed "$CLASSPATH" )
++
++    JAVACMD=$( cygpath --unix "$JAVACMD" )
++
++    # Now convert the arguments - kludge to limit ourselves to /bin/sh
++    for arg do
++        if
++            case $arg in                                #(
++              -*)   false ;;                            # don't mess with options #(
++              /?*)  t=${arg#/} t=/${t%%/*}              # looks like a POSIX filepath
++                    [ -e "$t" ] ;;                      #(
++              *)    false ;;
++            esac
++        then
++            arg=$( cygpath --path --ignore --mixed "$arg" )
++        fi
++        # Roll the args list around exactly as many times as the number of
++        # args, so each arg winds up back in the position where it started, but
++        # possibly modified.
++        #
++        # NB: a `for` loop captures its iteration list before it begins, so
++        # changing the positional parameters here affects neither the number of
++        # iterations, nor the values presented in `arg`.
++        shift                   # remove old arg
++        set -- "$@" "$arg"      # push replacement arg
++    done
++fi
++
++# Collect all arguments for the java command;
++#   * $DEFAULT_JVM_OPTS, $JAVA_OPTS, and $GRADLE_OPTS can contain fragments of
++#     shell script including quotes and variable substitutions, so put them in
++#     double quotes to make sure that they get re-expanded; and
++#   * put everything else in single quotes, so that it's not re-expanded.
++
++set -- \
++        "-Dorg.gradle.appname=$APP_BASE_NAME" \
++        -classpath "$CLASSPATH" \
++        org.gradle.wrapper.GradleWrapperMain \
++        "$@"
++
++# Stop when "xargs" is not available.
++if ! command -v xargs >/dev/null 2>&1
++then
++    die "xargs is not available"
++fi
++
++# Use "xargs" to parse quoted args.
++#
++# With -n1 it outputs one arg per line, with the quotes and backslashes removed.
++#
++# In Bash we could simply go:
++#
++#   readarray ARGS < <( xargs -n1 <<<"$var" ) &&
++#   set -- "${ARGS[@]}" "$@"
++#
++# but POSIX shell has neither arrays nor command substitution, so instead we
++# post-process each arg (as a line of input to sed) to backslash-escape any
++# character that might be a shell metacharacter, then use eval to reverse
++# that process (while maintaining the separation between arguments), and wrap
++# the whole thing up as a single "set" statement.
++#
++# This will of course break if any of these variables contains a newline or
++# an unmatched quote.
++#
++
++eval "set -- $(
++        printf '%s\n' "$DEFAULT_JVM_OPTS $JAVA_OPTS $GRADLE_OPTS" |
++        xargs -n1 |
++        sed ' s~[^-[:alnum:]+,./:=@_]~\\&~g; ' |
++        tr '\n' ' '
++    )" '"$@"'
++
++exec "$JAVACMD" "$@"
+Index: android/gradlew.bat
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/android/gradlew.bat b/android/gradlew.bat
+new file mode 100644
+--- /dev/null	(date 499162500000)
++++ b/android/gradlew.bat	(date 499162500000)
+@@ -0,0 +1,91 @@
++@rem
++@rem Copyright 2015 the original author or authors.
++@rem
++@rem Licensed under the Apache License, Version 2.0 (the "License");
++@rem you may not use this file except in compliance with the License.
++@rem You may obtain a copy of the License at
++@rem
++@rem      https://www.apache.org/licenses/LICENSE-2.0
++@rem
++@rem Unless required by applicable law or agreed to in writing, software
++@rem distributed under the License is distributed on an "AS IS" BASIS,
++@rem WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++@rem See the License for the specific language governing permissions and
++@rem limitations under the License.
++@rem
++
++@if "%DEBUG%"=="" @echo off
++@rem ##########################################################################
++@rem
++@rem  Gradle startup script for Windows
++@rem
++@rem ##########################################################################
++
++@rem Set local scope for the variables with windows NT shell
++if "%OS%"=="Windows_NT" setlocal
++
++set DIRNAME=%~dp0
++if "%DIRNAME%"=="" set DIRNAME=.
++set APP_BASE_NAME=%~n0
++set APP_HOME=%DIRNAME%
++
++@rem Resolve any "." and ".." in APP_HOME to make it shorter.
++for %%i in ("%APP_HOME%") do set APP_HOME=%%~fi
++
++@rem Add default JVM options here. You can also use JAVA_OPTS and GRADLE_OPTS to pass JVM options to this script.
++set DEFAULT_JVM_OPTS="-Xmx64m" "-Xms64m"
++
++@rem Find java.exe
++if defined JAVA_HOME goto findJavaFromJavaHome
++
++set JAVA_EXE=java.exe
++%JAVA_EXE% -version >NUL 2>&1
++if %ERRORLEVEL% equ 0 goto execute
++
++echo.
++echo ERROR: JAVA_HOME is not set and no 'java' command could be found in your PATH.
++echo.
++echo Please set the JAVA_HOME variable in your environment to match the
++echo location of your Java installation.
++
++goto fail
++
++:findJavaFromJavaHome
++set JAVA_HOME=%JAVA_HOME:"=%
++set JAVA_EXE=%JAVA_HOME%/bin/java.exe
++
++if exist "%JAVA_EXE%" goto execute
++
++echo.
++echo ERROR: JAVA_HOME is set to an invalid directory: %JAVA_HOME%
++echo.
++echo Please set the JAVA_HOME variable in your environment to match the
++echo location of your Java installation.
++
++goto fail
++
++:execute
++@rem Setup the command line
++
++set CLASSPATH=%APP_HOME%\gradle\wrapper\gradle-wrapper.jar
++
++
++@rem Execute Gradle
++"%JAVA_EXE%" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %GRADLE_OPTS% "-Dorg.gradle.appname=%APP_BASE_NAME%" -classpath "%CLASSPATH%" org.gradle.wrapper.GradleWrapperMain %*
++
++:end
++@rem End local scope for the variables with windows NT shell
++if %ERRORLEVEL% equ 0 goto mainEnd
++
++:fail
++rem Set variable GRADLE_EXIT_CONSOLE if you need the _script_ return code instead of
++rem the _cmd.exe /c_ return code!
++set EXIT_CODE=%ERRORLEVEL%
++if %EXIT_CODE% equ 0 set EXIT_CODE=1
++if not ""=="%GRADLE_EXIT_CONSOLE%" exit %EXIT_CODE%
++exit /b %EXIT_CODE%
++
++:mainEnd
++if "%OS%"=="Windows_NT" endlocal
++
++:omega
+Index: android/settings.gradle
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/android/settings.gradle b/android/settings.gradle
+new file mode 100644
+--- /dev/null	(date 1687871207448)
++++ b/android/settings.gradle	(date 1687871207448)
+@@ -0,0 +1,10 @@
++rootProject.name = 'Oasys'
++
++apply from: new File(["node", "--print", "require.resolve('expo/package.json')"].execute(null, rootDir).text.trim(), "../scripts/autolinking.gradle");
++useExpoModules()
++
++apply from: new File(["node", "--print", "require.resolve('@react-native-community/cli-platform-android/package.json')"].execute(null, rootDir).text.trim(), "../native_modules.gradle");
++applyNativeModulesSettingsGradle(settings)
++
++include ':app'
++includeBuild(new File(["node", "--print", "require.resolve('react-native-gradle-plugin/package.json')"].execute(null, rootDir).text.trim()).getParentFile())
+Index: android/app/build.gradle
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/android/app/build.gradle b/android/app/build.gradle
+new file mode 100644
+--- /dev/null	(date 1687871207450)
++++ b/android/app/build.gradle	(date 1687871207450)
+@@ -0,0 +1,237 @@
++apply plugin: "com.android.application"
++apply plugin: "com.facebook.react"
++
++import com.android.build.OutputFile
++
++def projectRoot = rootDir.getAbsoluteFile().getParentFile().getAbsolutePath()
++def expoDebuggableVariants = ['debug']
++// Override `debuggableVariants` for expo-updates debugging
++if (System.getenv('EX_UPDATES_NATIVE_DEBUG') == "1") {
++  react {
++    expoDebuggableVariants = []
++  }
++}
++
++
++/**
++ * This is the configuration block to customize your React Native Android app.
++ * By default you don't need to apply any configuration, just uncomment the lines you need.
++ */
++react {
++    entryFile = file(["node", "-e", "require('expo/scripts/resolveAppEntry')", projectRoot, "android", "absolute"].execute(null, rootDir).text.trim())
++    reactNativeDir = new File(["node", "--print", "require.resolve('react-native/package.json')"].execute(null, rootDir).text.trim()).getParentFile().getAbsoluteFile()
++    hermesCommand = new File(["node", "--print", "require.resolve('react-native/package.json')"].execute(null, rootDir).text.trim()).getParentFile().getAbsolutePath() + "/sdks/hermesc/%OS-BIN%/hermesc"
++    debuggableVariants = expoDebuggableVariants
++
++    /* Folders */
++    //   The root of your project, i.e. where "package.json" lives. Default is '..'
++    // root = file("../")
++    //   The folder where the react-native NPM package is. Default is ../node_modules/react-native
++    // reactNativeDir = file("../node_modules/react-native")
++    //   The folder where the react-native Codegen package is. Default is ../node_modules/react-native-codegen
++    // codegenDir = file("../node_modules/react-native-codegen")
++    //   The cli.js file which is the React Native CLI entrypoint. Default is ../node_modules/react-native/cli.js
++    // cliFile = file("../node_modules/react-native/cli.js")
++
++    /* Variants */
++    //   The list of variants to that are debuggable. For those we're going to
++    //   skip the bundling of the JS bundle and the assets. By default is just 'debug'.
++    //   If you add flavors like lite, prod, etc. you'll have to list your debuggableVariants.
++    // debuggableVariants = ["liteDebug", "prodDebug"]
++
++    /* Bundling */
++    //   A list containing the node command and its flags. Default is just 'node'.
++    // nodeExecutableAndArgs = ["node"]
++    //
++    //   The command to run when bundling. By default is 'bundle'
++    // bundleCommand = "ram-bundle"
++    //
++    //   The path to the CLI configuration file. Default is empty.
++    // bundleConfig = file(../rn-cli.config.js)
++    //
++    //   The name of the generated asset file containing your JS bundle
++    // bundleAssetName = "MyApplication.android.bundle"
++    //
++    //   The entry file for bundle generation. Default is 'index.android.js' or 'index.js'
++    // entryFile = file("../js/MyApplication.android.js")
++    //
++    //   A list of extra flags to pass to the 'bundle' commands.
++    //   See https://github.com/react-native-community/cli/blob/main/docs/commands.md#bundle
++    // extraPackagerArgs = []
++
++    /* Hermes Commands */
++    //   The hermes compiler command to run. By default it is 'hermesc'
++    // hermesCommand = "$rootDir/my-custom-hermesc/bin/hermesc"
++    //
++    //   The list of flags to pass to the Hermes compiler. By default is "-O", "-output-source-map"
++    // hermesFlags = ["-O", "-output-source-map"]
++}
++
++// Override `hermesEnabled` by `expo.jsEngine`
++ext {
++  hermesEnabled = (findProperty('expo.jsEngine') ?: "hermes") == "hermes"
++}
++
++/**
++ * Set this to true to create four separate APKs instead of one,
++ * one for each native architecture. This is useful if you don't
++ * use App Bundles (https://developer.android.com/guide/app-bundle/)
++ * and want to have separate APKs to upload to the Play Store.
++ */
++def enableSeparateBuildPerCPUArchitecture = false
++
++/**
++ * Set this to true to Run Proguard on Release builds to minify the Java bytecode.
++ */
++def enableProguardInReleaseBuilds = (findProperty('android.enableProguardInReleaseBuilds') ?: false).toBoolean()
++
++/**
++ * The preferred build flavor of JavaScriptCore (JSC)
++ *
++ * For example, to use the international variant, you can use:
++ * `def jscFlavor = 'org.webkit:android-jsc-intl:+'`
++ *
++ * The international variant includes ICU i18n library and necessary data
++ * allowing to use e.g. `Date.toLocaleString` and `String.localeCompare` that
++ * give correct results when using with locales other than en-US. Note that
++ * this variant is about 6MiB larger per architecture than default.
++ */
++def jscFlavor = 'org.webkit:android-jsc:+'
++
++/**
++ * Private function to get the list of Native Architectures you want to build.
++ * This reads the value from reactNativeArchitectures in your gradle.properties
++ * file and works together with the --active-arch-only flag of react-native run-android.
++ */
++def reactNativeArchitectures() {
++    def value = project.getProperties().get("reactNativeArchitectures")
++    return value ? value.split(",") : ["armeabi-v7a", "x86", "x86_64", "arm64-v8a"]
++}
++
++android {
++    ndkVersion rootProject.ext.ndkVersion
++
++    compileSdkVersion rootProject.ext.compileSdkVersion
++
++    namespace 'com.oasys.Oasys'
++    defaultConfig {
++        applicationId 'com.oasys.Oasys'
++        minSdkVersion rootProject.ext.minSdkVersion
++        targetSdkVersion rootProject.ext.targetSdkVersion
++        versionCode 1
++        versionName "1.0.0"
++    }
++
++    splits {
++        abi {
++            reset()
++            enable enableSeparateBuildPerCPUArchitecture
++            universalApk false  // If true, also generate a universal APK
++            include (*reactNativeArchitectures())
++        }
++    }
++    signingConfigs {
++        debug {
++            storeFile file('debug.keystore')
++            storePassword 'android'
++            keyAlias 'androiddebugkey'
++            keyPassword 'android'
++        }
++    }
++    buildTypes {
++        debug {
++            signingConfig signingConfigs.debug
++        }
++        release {
++            // Caution! In production, you need to generate your own keystore file.
++            // see https://reactnative.dev/docs/signed-apk-android.
++            signingConfig signingConfigs.debug
++            shrinkResources (findProperty('android.enableShrinkResourcesInReleaseBuilds')?.toBoolean() ?: false)
++            minifyEnabled enableProguardInReleaseBuilds
++            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
++        }
++    }
++
++    // applicationVariants are e.g. debug, release
++    applicationVariants.all { variant ->
++        variant.outputs.each { output ->
++            // For each separate APK per architecture, set a unique version code as described here:
++            // https://developer.android.com/studio/build/configure-apk-splits.html
++            // Example: versionCode 1 will generate 1001 for armeabi-v7a, 1002 for x86, etc.
++            def versionCodes = ["armeabi-v7a": 1, "x86": 2, "arm64-v8a": 3, "x86_64": 4]
++            def abi = output.getFilter(OutputFile.ABI)
++            if (abi != null) {  // null for the universal-debug, universal-release variants
++                output.versionCodeOverride =
++                        defaultConfig.versionCode * 1000 + versionCodes.get(abi)
++            }
++
++        }
++    }
++}
++
++// Apply static values from `gradle.properties` to the `android.packagingOptions`
++// Accepts values in comma delimited lists, example:
++// android.packagingOptions.pickFirsts=/LICENSE,**/picasa.ini
++["pickFirsts", "excludes", "merges", "doNotStrip"].each { prop ->
++    // Split option: 'foo,bar' -> ['foo', 'bar']
++    def options = (findProperty("android.packagingOptions.$prop") ?: "").split(",");
++    // Trim all elements in place.
++    for (i in 0..<options.size()) options[i] = options[i].trim();
++    // `[] - ""` is essentially `[""].filter(Boolean)` removing all empty strings.
++    options -= ""
++
++    if (options.length > 0) {
++        println "android.packagingOptions.$prop += $options ($options.length)"
++        // Ex: android.packagingOptions.pickFirsts += '**/SCCS/**'
++        options.each {
++            android.packagingOptions[prop] += it
++        }
++    }
++}
++
++dependencies {
++    // The version of react-native is set by the React Native Gradle Plugin
++    implementation("com.facebook.react:react-android")
++
++    def isGifEnabled = (findProperty('expo.gif.enabled') ?: "") == "true";
++    def isWebpEnabled = (findProperty('expo.webp.enabled') ?: "") == "true";
++    def isWebpAnimatedEnabled = (findProperty('expo.webp.animated') ?: "") == "true";
++    def frescoVersion = rootProject.ext.frescoVersion
++
++    // If your app supports Android versions before Ice Cream Sandwich (API level 14)
++    if (isGifEnabled || isWebpEnabled) {
++        implementation("com.facebook.fresco:fresco:${frescoVersion}")
++        implementation("com.facebook.fresco:imagepipeline-okhttp3:${frescoVersion}")
++    }
++
++    if (isGifEnabled) {
++        // For animated gif support
++        implementation("com.facebook.fresco:animated-gif:${frescoVersion}")
++    }
++
++    if (isWebpEnabled) {
++        // For webp support
++        implementation("com.facebook.fresco:webpsupport:${frescoVersion}")
++        if (isWebpAnimatedEnabled) {
++            // Animated webp support
++            implementation("com.facebook.fresco:animated-webp:${frescoVersion}")
++        }
++    }
++
++    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.0.0")
++
++    debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}")
++    debugImplementation("com.facebook.flipper:flipper-network-plugin:${FLIPPER_VERSION}") {
++        exclude group:'com.squareup.okhttp3', module:'okhttp'
++    }
++    debugImplementation("com.facebook.flipper:flipper-fresco-plugin:${FLIPPER_VERSION}")
++
++    if (hermesEnabled.toBoolean()) {
++        implementation("com.facebook.react:hermes-android")
++    } else {
++        implementation jscFlavor
++    }
++}
++
++apply from: new File(["node", "--print", "require.resolve('@react-native-community/cli-platform-android/package.json')"].execute(null, rootDir).text.trim(), "../native_modules.gradle");
++applyNativeModulesAppBuildGradle(project)
+Index: android/app/proguard-rules.pro
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/android/app/proguard-rules.pro b/android/app/proguard-rules.pro
+new file mode 100644
+--- /dev/null	(date 499162500000)
++++ b/android/app/proguard-rules.pro	(date 499162500000)
+@@ -0,0 +1,14 @@
++# Add project specific ProGuard rules here.
++# By default, the flags in this file are appended to flags specified
++# in /usr/local/Cellar/android-sdk/24.3.3/tools/proguard/proguard-android.txt
++# You can edit the include path and order by changing the proguardFiles
++# directive in build.gradle.
++#
++# For more details, see
++#   http://developer.android.com/guide/developing/tools/proguard.html
++
++# react-native-reanimated
++-keep class com.swmansion.reanimated.** { *; }
++-keep class com.facebook.react.turbomodule.** { *; }
++
++# Add any project specific keep options here:
+Index: android/app/src/main/java/com/oasys/Oasys/MainActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/android/app/src/main/java/com/oasys/Oasys/MainActivity.java b/android/app/src/main/java/com/oasys/Oasys/MainActivity.java
+new file mode 100644
+--- /dev/null	(date 1687871203128)
++++ b/android/app/src/main/java/com/oasys/Oasys/MainActivity.java	(date 1687871203128)
+@@ -0,0 +1,68 @@
++package com.oasys.Oasys;
++
++import android.os.Build;
++import android.os.Bundle;
++
++import com.facebook.react.ReactActivity;
++import com.facebook.react.ReactActivityDelegate;
++import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint;
++import com.facebook.react.defaults.DefaultReactActivityDelegate;
++
++import expo.modules.ReactActivityDelegateWrapper;
++
++public class MainActivity extends ReactActivity {
++  @Override
++  protected void onCreate(Bundle savedInstanceState) {
++    // Set the theme to AppTheme BEFORE onCreate to support 
++    // coloring the background, status bar, and navigation bar.
++    // This is required for expo-splash-screen.
++    setTheme(R.style.AppTheme);
++    super.onCreate(null);
++  }
++
++  /**
++   * Returns the name of the main component registered from JavaScript.
++   * This is used to schedule rendering of the component.
++   */
++  @Override
++  protected String getMainComponentName() {
++    return "main";
++  }
++
++  /**
++   * Returns the instance of the {@link ReactActivityDelegate}. Here we use a util class {@link
++   * DefaultReactActivityDelegate} which allows you to easily enable Fabric and Concurrent React
++   * (aka React 18) with two boolean flags.
++   */
++  @Override
++  protected ReactActivityDelegate createReactActivityDelegate() {
++    return new ReactActivityDelegateWrapper(this, BuildConfig.IS_NEW_ARCHITECTURE_ENABLED, new DefaultReactActivityDelegate(
++        this,
++        getMainComponentName(),
++        // If you opted-in for the New Architecture, we enable the Fabric Renderer.
++        DefaultNewArchitectureEntryPoint.getFabricEnabled(), // fabricEnabled
++        // If you opted-in for the New Architecture, we enable Concurrent React (i.e. React 18).
++        DefaultNewArchitectureEntryPoint.getConcurrentReactEnabled() // concurrentRootEnabled
++        ));
++  }
++
++  /**
++   * Align the back button behavior with Android S
++   * where moving root activities to background instead of finishing activities.
++   * @see <a href="https://developer.android.com/reference/android/app/Activity#onBackPressed()">onBackPressed</a>
++   */
++  @Override
++  public void invokeDefaultOnBackPressed() {
++    if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.R) {
++      if (!moveTaskToBack(false)) {
++        // For non-root activities, use the default implementation to finish them.
++        super.invokeDefaultOnBackPressed();
++      }
++      return;
++    }
++
++    // Use the default back button implementation on Android S
++    // because it's doing more than {@link Activity#moveTaskToBack} in fact.
++    super.invokeDefaultOnBackPressed();
++  }
++}
