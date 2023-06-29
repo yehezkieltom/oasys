@@ -6,11 +6,20 @@ import CheckBox from "react-native-check-box";
 import Slider from "@react-native-community/slider";
 import { Button } from 'react-native';
 import DatePicker from 'react-native-date-picker';
+import {Formik, useFormik} from 'formik';
+import * as yup from "yup";
 
 
 
-
-
+function validateAlcohol(value) {
+    let error;
+    if(value<0) {
+        error = 'Please input non-negative numbers'
+    } else if (value>15) {
+        error = 'Please input numbers below 16'
+    }
+    return error;
+}
 
 function healthDetailsForm() {
     const [isChecked, setIsChecked] = useState({
@@ -28,7 +37,7 @@ function healthDetailsForm() {
     const minAlcohol = 0.0;
     const maxAlcohol = 15.0;
 
-    const [range, setRange] = useState('5 ');
+    const [range, setRange] = useState(5 );
     const [value, setValue] = useState(0); //gender
     const items = [ {label: "Male", value: 0}, {label: "Female", value: 1}]
     const [age, setAge] = useState('22');
@@ -43,6 +52,17 @@ function healthDetailsForm() {
     function handleChangeAlcohol(typedAlcohol) {
         const checkedAlcohol = Math.max(minAlcohol, Math.min(maxAlcohol, Number(typedAlcohol)));
         setAlcohol(checkedAlcohol);
+    }
+
+    function validateAlcohol(value) {
+        let error;
+        if (!value) {
+            error = "Required";
+        } else if (!/^[0-9]+(\.[0-9]+)?$/.test(value)) {
+            error = "Invalid input";
+        } else if (value < 0) {
+            error = "Please input a non-negative integer";
+        }
     }
 
     return (
@@ -84,22 +104,26 @@ function healthDetailsForm() {
                 }}
             />
         </View>
-        <View style={styles.attributeContainer}>
-            <Text style={styles.attributeName}>
-                How much alcohol do you drink per week
-            </Text>
-            <View style={styles.inputTextContainer} >
-                <TextInput style={styles.input}
-                           textAlign='center'
-                           placeholder='3.0'
-                           onChangeText={(value) => handleChangeAlcohol(value)}
-                           underlineColorAndroid="#19A7CE"
-                           keyboardType='number-pad'/>
-                <Text >
-                    You drink <Text style={styles.innerText}> {alcohol}</Text> units alcohol per week
-                </Text>
-            </View>
-        </View>
+            <Formik
+                onSubmit={values => {
+                    setAlcohol(values.alcohol);
+                }} initialValues={{alcohol: alcohol}}>
+                {({ handleChange, handleBlur, values }) => (
+                    <View style={styles.attributeContainer}>
+                        <Text style={styles.attributeName}>
+                            How much alcohol do you drink weekly?
+                        </Text>
+                        <View style={styles.inputTextContainer}>
+                            <TextInput style={styles.input}
+                                       onChangeText={handleChange('alcohol')}
+                                       onBlur={handleBlur('alcohol')}
+                                       validate={validateAlcohol}
+                                       value={values.alcohol}
+                                      /* keyboardType='number-pad'*//>
+                        </View>
+                    </View>
+                )}
+            </Formik>
         <View style={styles.attributeContainer}>
             <Text style={styles.attributeName}>
                 How much physical activities do you do in a week

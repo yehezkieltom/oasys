@@ -17,6 +17,7 @@
     "deprecated-react-native-prop-types": "^4.1.0",
     "expo": "~48.0.15",
     "expo-status-bar": "~1.4.4",
+    "formik": "^2.4.2",
     "patch-package": "^7.0.0",
     "react": "18.2.0",
     "react-native": "0.71.8",
@@ -29,7 +30,8 @@
     "react-native-svg": "13.4.0",
     "react-native-vector-icons": "^9.2.0",
     "react-native-webp-format": "^1.2.0",
-    "react-navigation": "^4.4.4"
+    "react-navigation": "^4.4.4",
+    "yup": "^1.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
