@@ -1,25 +1,22 @@
-import {Button, StyleSheet, Text,View} from "react-native";
+import {Button, Text, StyleSheet, View, Pressable} from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import {Divider} from "react-native-paper";
+import  {useState} from 'react';
 
 function healthDetailsView({navigation}) {
+    const [gender, setGender] = useState('female');
+    const [dateOfBirth, setDateOfBirth] = useState(new Date('2000-01-01'));
+    const [alcohol, setAlcohol] = useState(3.0);
+    const [activity, setActivity] = useState('moderate')
 
     return(
         <View style={styles.container}>
-            <View style={styles.iconStyle}>
-                <Icon name="square-edit-outline"
-                      size={50}
-                      color='#3b5998'
-                      style={{height:50,width:50}}
-                      onPress={() => navigation.navigate('Health Details Form')}/>
-            </View>
             <View style={styles.attributeContainer}>
                 <View style={styles.oneAttribute}>
                     <Text style={styles.attributeName}>
                         Gender
                     </Text>
                     <Text style={styles.inputName}>
-                        Female
+                        {gender}
                     </Text>
                 </View>
                 <View style={styles.oneAttribute}>
@@ -27,7 +24,7 @@ function healthDetailsView({navigation}) {
                         Date of Birth
                     </Text>
                     <Text style={styles.inputName}>
-                        01.01.2000
+                        {dateOfBirth.toLocaleDateString('de-DE', { year: 'numeric', month: 'numeric', day: 'numeric' })}
                     </Text>
                 </View>
                 <View style={styles.oneAttribute}>
@@ -35,7 +32,7 @@ function healthDetailsView({navigation}) {
                         Alcohol Consumption
                     </Text>
                     <Text style={styles.inputName}>
-                        3 units/weeks
+                        {alcohol} { alcohol === 1 ? 'unit' :  'units' }/week
                     </Text>
                 </View>
                 <View style={styles.oneAttribute}>
@@ -43,7 +40,7 @@ function healthDetailsView({navigation}) {
                         Weekly Activity
                     </Text>
                     <Text style={styles.inputName}>
-                        moderate
+                        {activity}
                     </Text>
                 </View>
                 <View style={styles.oneAttribute}>
@@ -52,8 +49,20 @@ function healthDetailsView({navigation}) {
                     </Text>
                     <Text style={styles.inputName}>
                         Pregnant
+                    </Text>
+                    <Text style={styles.inputName}>
                         Diarrhea
                     </Text>
+                    <Text style={styles.inputName}>
+                        John Pork
+                    </Text>
+                </View>
+                <View>
+                    <Pressable onPress={() => navigation.navigate('Health Details Form')}>
+                        <Text style={styles.editButton}>
+                            edit details
+                        </Text>
+                    </Pressable>
                 </View>
             </View>
         </View>
@@ -81,27 +90,38 @@ const styles= StyleSheet.create ({
         color: 'black',
         fontSize: 20,
         fontWeight: "normal",
-        marginTop: 20,
+        marginTop: 1,
     },
 
     attributeContainer:{
-        padding: 30,
-        marginTop:20,
+        paddingLeft: 15,
+        marginTop:5,
     },
 
     oneAttribute: {
-        marginTop: 20,
+        marginTop: 15,
     },
 
     inputName: {
         color: 'black',
         fontSize: 22,
         fontWeight: "bold",
-        marginBottom: 20,
+        marginBottom: 1,
     },
 
     spacing:{
         marginTop: 20,
-    }
+    },
+
+    editButton:{
+        color: '#19A7CE',
+        fontSize: 28,
+        fontWeight: "bold",
+        marginTop: 5,
+        paddingTop: 10,
+        paddingBottom: 10,
+        textAlign: 'center',
+
+    },
 
 });
