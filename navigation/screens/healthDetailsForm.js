@@ -16,10 +16,27 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function healthDetailsForm({navigation}) {
 
+    let userInfo;
+
+    useEffect(() => {
+        const loadUserInfo = async () => {
+            try {
+                const storedUserInfo = await AsyncStorage.getItem('userInfo');
+                if (storedUserInfo) {
+                    userInfo=JSON.parse(storedUserInfo);
+                }
+            } catch (error) {
+                console.error('Error loading user info:', error);
+            }
+        };
+
+        loadUserInfo();
+    }, []);
+
     const [isChecked, setIsChecked] = useState({
-        pregnant: false,
-        breastfeeding: false,
-        diarrhea: false,}
+        pregnant: userInfo.information.pregnant,
+        breastfeeding: userInfo.information.breastfeeding,
+        diarrhea: userInfo.information.diarrhea,}
     );
 
     const [isFormDirty, setIsFormDirty] = useState(false);
@@ -28,10 +45,11 @@ function healthDetailsForm({navigation}) {
     const [open, setOpen] = useState(false);
 
 
-    const [value, setValue] = useState(); //gender
+
+    const [value, setValue] = useState(parseInt(userInfo.gender)); //gender
     const items = [ {label: "Male", value: 0}, {label: "Female", value: 1}]
-    const [alcohol, setAlcohol] = useState();
-    const [activity, setActivity] = useState();
+    const [alcohol, setAlcohol] = useState(parseInt(userInfo.alcoholConsumption));
+    const [activity, setActivity] = useState(userInfo.weeklyActivity);
 
 
     function validateAlcohol(value) {
@@ -56,7 +74,7 @@ function healthDetailsForm({navigation}) {
             };
             await AsyncStorage.setItem('userInfo', JSON.stringify(updateUserInfo));
             setIsFormDirty(false);
-            navigation.navigate('Root');
+            navigation.navigate('Health Details');
         } catch (error) {
             console.error('Error updating user info:', error);
         }
@@ -153,18 +171,27 @@ function healthDetailsForm({navigation}) {
             <Text style={styles.attributeName}>
                 Additional information
             </Text>
-            <CheckBox isChecked={isChecked.pregnant} onClick={() => setIsChecked({...isChecked, pregnant: !isChecked.pregnant})}
+            <CheckBox isChecked={isChecked.pregnant} onClick={() => {
+                setIsChecked({...isChecked, pregnant: !isChecked.pregnant});
+                setIsFormDirty(true);
+            }}
             rightText="Pregnant" righTextStyle={ {color: isChecked.pregnant ? '#19A7CE' : 'black', fontSize: 19, fontWeight: "bold",} }
                       checkedCheckBoxColor= '#19A7CE'
             checkBoxColor= "black"
             >
             </CheckBox>
-            <CheckBox isChecked={isChecked.breastfeeding} onClick={() => setIsChecked({...isChecked, breastfeeding: !isChecked.breastfeeding})}
+            <CheckBox isChecked={isChecked.breastfeeding} onClick={() => {
+                setIsChecked({...isChecked, breastfeeding: !isChecked.breastfeeding});
+                setIsFormDirty(true);
+            }}
                       rightText="Breastfeeding"  righTextStyle={ {color: isChecked.breastfeeding ? '#19A7CE' : 'black', fontSize: 19, fontWeight: "bold",} }
                       checkedCheckBoxColor= '#19A7CE' checkBoxColor= "black"
             >
             </CheckBox>
-            <CheckBox isChecked={isChecked.diarrhea} onClick={() => setIsChecked({...isChecked,diarrhea: !isChecked.diarrhea})}
+            <CheckBox isChecked={isChecked.diarrhea} onClick={() => {
+                setIsChecked({...isChecked, diarrhea: !isChecked.diarrhea});
+                setIsFormDirty(true);
+            }}
                       rightText="Fluid imbalance" righTextStyle={ {color: isChecked.diarrhea ? '#19A7CE' : 'black', fontSize: 19, fontWeight: "bold",} }
                       checkedCheckBoxColor= '#19A7CE' checkBoxColor= "black"
             >

@@ -27,15 +27,15 @@ function healthDetailsView({navigation}) {
 
     function setRealActivity (number) {
         let name;
-        if (0 <= number <=1 ) {
+        if (0 <= number && number <=1 ) {
             name = 'light';
-        } else if (2<= number <=3) {
+        } else if (2<= number && number <=3) {
             name = 'lightly medium';
-        } else if (4<= number <=6) {
+        } else if (4<= number && number <=6) {
             name = 'medium';
-        } else if (7<= number <=8) {
+        } else if (7<= number && number <=8) {
             name = 'intense medium';
-        } else if (9<= number <=10) {
+        } else if (9<= number && number <=10) {
             name = 'intense';
         }
         return name;
@@ -69,7 +69,7 @@ function healthDetailsView({navigation}) {
                         Gender
                     </Text>
                     <Text style={styles.inputName}>
-                        {setRealGender(userInfo && userInfo.gender)}
+                        {userInfo && setRealGender( userInfo.gender)}
                     </Text>
                 </View>
                 <View style={styles.oneAttribute}>
@@ -93,7 +93,7 @@ function healthDetailsView({navigation}) {
                         Weekly Activity
                     </Text>
                     <Text style={styles.inputName}>
-                        {setRealActivity(userInfo && userInfo.weeklyActivity)}
+                        {userInfo && setRealActivity( userInfo.weeklyActivity)}
                     </Text>
                 </View>
                 <View style={styles.oneAttribute}>
@@ -101,13 +101,13 @@ function healthDetailsView({navigation}) {
                         additional details
                     </Text>
                     <Text style={styles.inputName}>
-                        Pregnant
+                        {userInfo && userInfo.information.pregnant && 'Pregnant'}
                     </Text>
                     <Text style={styles.inputName}>
-                        Diarrhea
+                        {userInfo && userInfo.information.breastfeeding && 'Breastfeeding'}
                     </Text>
                     <Text style={styles.inputName}>
-                        John Pork
+                        {userInfo && userInfo.information.diarrhea && 'Fluid imbalance'}
                     </Text>
                 </View>
                 <View>
