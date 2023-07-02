@@ -1,58 +1,38 @@
 import * as React from 'react';
-import {View, StyleSheet, Text, ScrollView, TextInput} from 'react-native';
+import {View, StyleSheet, Text, ScrollView, TextInput, Pressable} from 'react-native';
 import RadioForm from 'react-native-simple-radio-button';
-import  {useState} from 'react';
+import {useEffect, useState} from 'react';
 import CheckBox from "react-native-check-box";
 import Slider from "@react-native-community/slider";
 import { Button } from 'react-native';
 import DatePicker from 'react-native-date-picker';
 import {Formik, useFormik} from 'formik';
-import * as yup from "yup";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 
-function validateAlcohol(value) {
-    let error;
-    if(value<0) {
-        error = 'Please input non-negative numbers'
-    } else if (value>15) {
-        error = 'Please input numbers below 16'
-    }
-    return error;
-}
 
-function healthDetailsForm() {
+
+
+function healthDetailsForm({navigation}) {
+
     const [isChecked, setIsChecked] = useState({
         pregnant: false,
         breastfeeding: false,
         diarrhea: false,}
     );
 
-    const [date, setDate] = useState(new Date());
+    const [isFormDirty, setIsFormDirty] = useState(false);
+
+    const [date, setDate] = useState(new Date(Date.now()));
     const [open, setOpen] = useState(false);
 
-    const minAge = 1;
-    const maxAge = 122;
 
-    const minAlcohol = 0.0;
-    const maxAlcohol = 15.0;
-
-    const [range, setRange] = useState(5 );
-    const [value, setValue] = useState(0); //gender
+    const [value, setValue] = useState(); //gender
     const items = [ {label: "Male", value: 0}, {label: "Female", value: 1}]
-    const [age, setAge] = useState('22');
-    const [alcohol, setAlcohol] = useState('3.0');
+    const [alcohol, setAlcohol] = useState();
+    const [activity, setActivity] = useState();
 
-
-    function handleChangeAge(typedAge) {
-        const checkedAge = Math.max(minAge, Math.min(maxAge, Number(typedAge)));
-        setAge(checkedAge);
-    }
-
-    function handleChangeAlcohol(typedAlcohol) {
-        const checkedAlcohol = Math.max(minAlcohol, Math.min(maxAlcohol, Number(typedAlcohol)));
-        setAlcohol(checkedAlcohol);
-    }
 
     function validateAlcohol(value) {
         let error;
@@ -65,6 +45,23 @@ function healthDetailsForm() {
         }
     }
 
+    const handleSave = async () => {
+        try {
+            const updateUserInfo = {
+                gender: value,
+                dateBirth: date,
+                alcoholConsumption: alcohol,
+                weeklyActivity: activity,
+                information: isChecked,
+            };
+            await AsyncStorage.setItem('userInfo', JSON.stringify(updateUserInfo));
+            setIsFormDirty(false);
+            navigation.navigate('Root');
+        } catch (error) {
+            console.error('Error updating user info:', error);
+        }
+    };
+
     return (
     <View style={styles.container}>
         {/*<View style={styles.logoScreen}>*/}
@@ -76,7 +73,8 @@ function healthDetailsForm() {
                 Select your Gender
             </Text>
             <RadioForm radio_props={items} initial={0}
-                       onPress={(value) => setValue (value)}
+                       value={value}
+                       onPress={(inp) => {setValue (inp); setIsFormDirty(true);}}
                        buttonColor='black'
                        labelColor= 'black'
                        selectedButtonColor= '#19A7CE'
@@ -104,26 +102,24 @@ function healthDetailsForm() {
                 }}
             />
         </View>
-            <Formik
-                onSubmit={values => {
-                    setAlcohol(values.alcohol);
-                }} initialValues={{alcohol: alcohol}}>
-                {({ handleChange, handleBlur, values }) => (
-                    <View style={styles.attributeContainer}>
-                        <Text style={styles.attributeName}>
-                            How much alcohol do you drink weekly?
-                        </Text>
-                        <View style={styles.inputTextContainer}>
-                            <TextInput style={styles.input}
-                                       onChangeText={handleChange('alcohol')}
-                                       onBlur={handleBlur('alcohol')}
-                                       validate={validateAlcohol}
-                                       value={values.alcohol}
-                                      /* keyboardType='number-pad'*//>
-                        </View>
-                    </View>
-                )}
-            </Formik>
+
+        <View style={styles.attributeContainer}>
+            <Text style={styles.attributeName}>
+                How much alcohol do you drink weekly?
+            </Text>
+            <View style={styles.inputTextContainer}>
+                <TextInput style={styles.input}
+                           onChangeText={(newAlcohol) => {
+                               setAlcohol(newAlcohol);
+                               setIsFormDirty(true);
+                           }}
+                           placeholder={'3.0'}
+                           value={alcohol}
+                          /* keyboardType='number-pad'*//>
+            </View>
+        </View>
+
+
         <View style={styles.attributeContainer}>
             <Text style={styles.attributeName}>
                 How much physical activities do you do in a week
@@ -136,9 +132,12 @@ function healthDetailsForm() {
                 minimumTrackTintColor= '#19A7CE'
                 maximumTrackTintColor='#000'
                 thumbTintColor='#19A7CE'
-                value={5}
+                value={activity}
                 step={1}
-                onValueChange={value => setRange(parseInt(value))}
+                onValueChange={value => {
+                    setActivity(value);
+                    setIsFormDirty(true);
+                }}
                 />
                 <View style={styles.sliderLabel}>
                     <Text style={styles.sliderLabelLeft}>
@@ -171,11 +170,13 @@ function healthDetailsForm() {
             >
             </CheckBox>
         </View>
+            <Button title="Save" onPress={handleSave} disabled={!isFormDirty} />
         </ScrollView>
 
     </View>
 
-    )    
+    )
+
 }
 healthDetailsForm.title = 'Health Details';
 

@@ -1,12 +1,65 @@
 import {Button, Text, StyleSheet, View, Pressable} from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import  {useState} from 'react';
+import {useEffect, useState} from 'react';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 function healthDetailsView({navigation}) {
+
     const [gender, setGender] = useState('female');
     const [dateOfBirth, setDateOfBirth] = useState(new Date('2000-01-01'));
     const [alcohol, setAlcohol] = useState(3.0);
-    const [activity, setActivity] = useState('moderate')
+    const [activity, setActivity] = useState('moderate');
+    const [isChecked, setIsChecked] = useState({
+        pregnant: false,
+        breastfeeding: false,
+        diarrhea: false,}
+    );
+
+    function setRealGender (number) {
+        let name;
+        if (number=== 0) {
+            name = 'Male';
+        } else {
+            name = 'Female';
+        }
+        return name;
+    }
+
+    function setRealActivity (number) {
+        let name;
+        if (0 <= number <=1 ) {
+            name = 'light';
+        } else if (2<= number <=3) {
+            name = 'lightly medium';
+        } else if (4<= number <=6) {
+            name = 'medium';
+        } else if (7<= number <=8) {
+            name = 'intense medium';
+        } else if (9<= number <=10) {
+            name = 'intense';
+        }
+        return name;
+    }
+
+    const [userInfo, setUserInfo] = useState(null);
+
+    useEffect(() => {
+        const loadUserInfo = async () => {
+            try {
+                const storedUserInfo = await AsyncStorage.getItem('userInfo');
+                if (storedUserInfo) {
+                    setUserInfo(JSON.parse(storedUserInfo));
+                }
+            } catch (error) {
+                console.error('Error loading user info:', error);
+            }
+        };
+
+        loadUserInfo();
+    }, []);
+
+
+
 
     return(
         <View style={styles.container}>
@@ -16,7 +69,7 @@ function healthDetailsView({navigation}) {
                         Gender
                     </Text>
                     <Text style={styles.inputName}>
-                        {gender}
+                        {setRealGender(userInfo && userInfo.gender)}
                     </Text>
                 </View>
                 <View style={styles.oneAttribute}>
@@ -32,7 +85,7 @@ function healthDetailsView({navigation}) {
                         Alcohol Consumption
                     </Text>
                     <Text style={styles.inputName}>
-                        {alcohol} { alcohol === 1 ? 'unit' :  'units' }/week
+                        {userInfo && userInfo.alcoholConsumption} { alcohol === 1 ? 'unit' :  'units' }/week
                     </Text>
                 </View>
                 <View style={styles.oneAttribute}>
@@ -40,7 +93,7 @@ function healthDetailsView({navigation}) {
                         Weekly Activity
                     </Text>
                     <Text style={styles.inputName}>
-                        {activity}
+                        {setRealActivity(userInfo && userInfo.weeklyActivity)}
                     </Text>
                 </View>
                 <View style={styles.oneAttribute}>
