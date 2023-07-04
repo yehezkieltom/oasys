@@ -10,6 +10,7 @@ import * as React from "react";
 
 
 
+
 function nfcScreen({navigation}) {
     return (
         <View style={styles.wholeScreen}>

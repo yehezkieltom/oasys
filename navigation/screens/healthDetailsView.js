@@ -41,7 +41,7 @@ function healthDetailsView({navigation}) {
         return name;
     }
 
-    const [userInfo, setUserInfo] = useState(null);
+    const [userInfo, setUserInfo] = useState();
 
     useEffect(() => {
         const loadUserInfo = async () => {

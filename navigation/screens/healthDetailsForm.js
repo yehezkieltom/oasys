@@ -16,7 +16,18 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function healthDetailsForm({navigation}) {
 
-    let userInfo;
+    let userInfo = {
+        //default Value if no AsyncStorage found
+        gender: 1,
+        dateBirth: new Date(Date.now()),
+        alcoholConsumption: 3,
+        weeklyActivity: 2,
+        information: {
+            pregnant: false,
+            breastfeeding: false,
+            diarrhea: false
+        },
+    };
 
     useEffect(() => {
         const loadUserInfo = async () => {
@@ -65,13 +76,29 @@ function healthDetailsForm({navigation}) {
 
     const handleSave = async () => {
         try {
-            const updateUserInfo = {
-                gender: value,
-                dateBirth: date,
-                alcoholConsumption: alcohol,
-                weeklyActivity: activity,
-                information: isChecked,
-            };
+            const updateUserInfo = {};
+            if (value) {
+                updateUserInfo.gender = value;
+            }
+            if (date) {
+                updateUserInfo.dateBirth = date;
+            }
+            if (alcohol) {
+                updateUserInfo.alcoholConsumption = alcohol;
+            }
+            if (activity) {
+                updateUserInfo.weeklyActivity = activity;
+            }
+            if (isChecked.pregnant) {
+                updateUserInfo.information.pregnant = isChecked.pregnant;
+            }
+            if (isChecked.breastfeeding) {
+                updateUserInfo.information.breastfeeding = isChecked.breastfeeding;
+            }
+            if (isChecked.diarrhea) {
+                updateUserInfo.information.diarrhea = isChecked.diarrhea;
+            }
+
             await AsyncStorage.setItem('userInfo', JSON.stringify(updateUserInfo));
             setIsFormDirty(false);
             navigation.navigate('Health Details');
