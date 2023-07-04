@@ -15,7 +15,7 @@ const clearAll = async () => {
     console.log('Done.')
 }
 const HomeScreen = () => {
-    clearAll();
+    // clearAll();
     return (
         <Provider>
             <View style={styles.fullScreenView}>

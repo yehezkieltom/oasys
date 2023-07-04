@@ -16,18 +16,24 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function healthDetailsForm({navigation}) {
 
-    let userInfo = {
-        //default Value if no AsyncStorage found
-        gender: 1,
-        dateBirth: new Date(Date.now()),
-        alcoholConsumption: 3,
-        weeklyActivity: 2,
-        information: {
-            pregnant: false,
-            breastfeeding: false,
-            diarrhea: false
-        },
-    };
+    const [isChecked, setIsChecked] = useState({
+        pregnant: false,
+        breastfeeding: false,
+        diarrhea: false,}
+    );
+
+    const [isFormDirty, setIsFormDirty] = useState(false);
+
+    const [date, setDate] = useState(new Date(Date.now()));
+    const [open, setOpen] = useState(false);
+
+
+
+    const [gender, setGender] = useState(1); //gender
+    const items = [ {label: "Male", value: 2}, {label: "Female", value: 1}]
+    const [alcohol, setAlcohol] = useState(3);
+    const [activity, setActivity] = useState(5);
+
 
     useEffect(() => {
         const loadUserInfo = async () => {
@@ -35,36 +41,72 @@ function healthDetailsForm({navigation}) {
                 const storedUserInfo = await AsyncStorage.getItem('userInfo');
                 if (storedUserInfo) {
                     //userInfo=JSON.parse(storedUserInfo);
-                    const fetchedUserInfo=JSON.parsed(storedUserInfo);
+                    const fetchedUserInfo=JSON.parse(storedUserInfo);
                     if (fetchedUserInfo.gender) {
-                        userInfo.gender = fetchedUserInfo.gender;
+                        setGender(fetchedUserInfo.gender);
                     }
                     if (fetchedUserInfo.dateBirth) {
-                        userInfo.dateBirth = fetchedUserInfo.dateBirth;
+                        setDate(fetchedUserInfo.dateBirth);
                     }
                     if (fetchedUserInfo.alcoholConsumption) {
-                        userInfo.alcoholConsumption = fetchedUserInfo.alcoholConsumption;
+                        setAlcohol(fetchedUserInfo.alcoholConsumption);
                     }
                     if (fetchedUserInfo.weeklyActivity) {
-                        userInfo.weeklyActivity = fetchedUserInfo;
+                        setActivity(fetchedUserInfo.weeklyActivity);
                     }
-                    if (!fetchedUserInfo.information.breastfeeding) {
-                        //dont fix this, because the value can be undefined and we dont want that, stupid JS
-                        userInfo.information.breastfeeding = false;
+                    if (!fetchedUserInfo.breastfeeding ) {
+                        //don't fix this, because the value can be undefined and we dont want that, stupid JS
+                        const { breastfeeding, ...rest } = isChecked;
+                        const fetchedBreastfeeding = false;
+                        const newIsChecked = {
+                            ...rest,
+                            breastfeeding: fetchedBreastfeeding
+                        };
+                        setIsChecked(newIsChecked);
                     } else {
-                        userInfo.information.breastfeeding = true;
+                        const { breastfeeding, ...rest } = isChecked;
+                        const fetchedBreastfeeding = true;
+                        const newIsChecked = {
+                            ...rest,
+                            breastfeeding: fetchedBreastfeeding
+                        };
+                        setIsChecked(newIsChecked);
                     }
-                    if (!fetchedUserInfo.information.pregnant) {
-                        //dont fix this, because the value can be undefined and we dont want that, stupid JS
-                        userInfo.information.pregnant = false;
+                    if (!fetchedUserInfo.pregnant) {
+                        //don't fix this, because the value can be undefined and we dont want that, stupid JS
+                        const { pregnant, ...rest } = isChecked;
+                        const fetchedPregnant = false;
+                        const newIsChecked = {
+                            ...rest,
+                            pregnant: fetchedPregnant
+                        };
+                        setIsChecked(newIsChecked);
                     } else {
-                        userInfo.information.pregnant = true;
+                        const { pregnant, ...rest } = isChecked;
+                        const fetchedPregnant = true;
+                        const newIsChecked = {
+                            ...rest,
+                            pregnant: fetchedPregnant
+                        };
+                        setIsChecked(newIsChecked);
                     }
-                    if (!fetchedUserInfo.information.diarrhea) {
-                        //dont fix this, because the value can be undefined and we dont want that, stupid JS
-                        userInfo.information.diarrhea = false;
+                    if (!fetchedUserInfo.diarrhea) {
+                        //don't fix this, because the value can be undefined and we dont want that, stupid JS
+                        const { diarrhea, ...rest } = isChecked;
+                        const fetchedDiarrhea = false;
+                        const newIsChecked = {
+                            ...rest,
+                            diarrhea: fetchedDiarrhea
+                        };
+                        setIsChecked(newIsChecked);
                     } else {
-                        userInfo.information.diarrhea = true;
+                        const { diarrhea, ...rest } = isChecked;
+                        const fetchedDiarrhea = true;
+                        const newIsChecked = {
+                            ...rest,
+                            diarrhea: fetchedDiarrhea
+                        };
+                        setIsChecked(newIsChecked);
                     }
                 }
             } catch (error) {
@@ -75,23 +117,7 @@ function healthDetailsForm({navigation}) {
         loadUserInfo();
     }, []);
 
-    const [isChecked, setIsChecked] = useState({
-        pregnant: userInfo.information.pregnant,
-        breastfeeding: userInfo.information.breastfeeding,
-        diarrhea: userInfo.information.diarrhea,}
-    );
 
-    const [isFormDirty, setIsFormDirty] = useState(false);
-
-    const [date, setDate] = useState(new Date(Date.now()));
-    const [open, setOpen] = useState(false);
-
-
-
-    const [value, setValue] = useState(parseInt(userInfo.gender)); //gender
-    const items = [ {label: "Male", value: 2}, {label: "Female", value: 1}]
-    const [alcohol, setAlcohol] = useState(parseInt(userInfo.alcoholConsumption));
-    const [activity, setActivity] = useState(userInfo.weeklyActivity);
 
 
     function validateAlcohol(value) {
@@ -108,8 +134,8 @@ function healthDetailsForm({navigation}) {
     const handleSave = async () => {
         try {
             const updateUserInfo = {};
-            if (value) {
-                updateUserInfo.gender = value;
+            if (gender) {
+                updateUserInfo.gender = gender;
             }
             if (date) {
                 updateUserInfo.dateBirth = date;
@@ -121,13 +147,13 @@ function healthDetailsForm({navigation}) {
                 updateUserInfo.weeklyActivity = activity;
             }
             if (isChecked.pregnant) {
-                updateUserInfo.information.pregnant = isChecked.pregnant;
+                updateUserInfo.pregnant = isChecked.pregnant;
             }
             if (isChecked.breastfeeding) {
-                updateUserInfo.information.breastfeeding = isChecked.breastfeeding;
+                updateUserInfo.breastfeeding = isChecked.breastfeeding;
             }
             if (isChecked.diarrhea) {
-                updateUserInfo.information.diarrhea = isChecked.diarrhea;
+                updateUserInfo.diarrhea = isChecked.diarrhea;
             }
 
             await AsyncStorage.setItem('userInfo', JSON.stringify(updateUserInfo));
@@ -149,8 +175,8 @@ function healthDetailsForm({navigation}) {
                 Select your Gender
             </Text>
             <RadioForm radio_props={items} initial={1}
-                       value={value}
-                       onPress={(inp) => {setValue (inp); setIsFormDirty(true);}}
+                       value={gender}
+                       onPress={(inp) => {setGender (inp); setIsFormDirty(true);}}
                        buttonColor='black'
                        labelColor= 'black'
                        selectedButtonColor= '#19A7CE'
@@ -165,7 +191,7 @@ function healthDetailsForm({navigation}) {
             <DatePicker
                 modal
                 open={open}
-                date={date}
+                date={new Date(Date.now())}
                 maximumDate={new Date("2023-06-29")}
                 minimumDate={new Date("1907-03-04")}
                 androidVariant={"nativeAndroid"}
@@ -189,8 +215,8 @@ function healthDetailsForm({navigation}) {
                                setAlcohol(newAlcohol);
                                setIsFormDirty(true);
                            }}
-                           placeholder={'3.0'}
-                           value={alcohol}
+                           placeholder={`${alcohol}`}
+                           value={alcohol.toString()}
                           /* keyboardType='number-pad'*//>
             </View>
         </View>

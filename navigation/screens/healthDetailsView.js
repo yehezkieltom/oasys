@@ -69,7 +69,7 @@ function healthDetailsView({navigation}) {
                         Gender
                     </Text>
                     <Text style={styles.inputName}>
-                        {userInfo && setRealGender( userInfo.gender)}
+                        {userInfo && setRealGender(userInfo.gender)}
                     </Text>
                 </View>
                 <View style={styles.oneAttribute}>
@@ -101,13 +101,13 @@ function healthDetailsView({navigation}) {
                         additional details
                     </Text>
                     <Text style={styles.inputName}>
-                        {userInfo && userInfo.information.pregnant && 'Pregnant'}
+                        {userInfo && userInfo.pregnant && 'Pregnant'}
                     </Text>
                     <Text style={styles.inputName}>
-                        {userInfo && userInfo.information.breastfeeding && 'Breastfeeding'}
+                        {userInfo && userInfo.breastfeeding && 'Breastfeeding'}
                     </Text>
                     <Text style={styles.inputName}>
-                        {userInfo && userInfo.information.diarrhea && 'Fluid imbalance'}
+                        {userInfo && userInfo.diarrhea && 'Fluid imbalance'}
                     </Text>
                 </View>
                 <View>
