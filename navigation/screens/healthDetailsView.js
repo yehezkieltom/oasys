@@ -17,9 +17,9 @@ function healthDetailsView({navigation}) {
 
     function setRealGender (number) {
         let name;
-        if (number=== 0) {
+        if (number=== 2) {
             name = 'Male';
-        } else {
+        } else if (number === 1) {
             name = 'Female';
         }
         return name;

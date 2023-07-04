@@ -34,7 +34,38 @@ function healthDetailsForm({navigation}) {
             try {
                 const storedUserInfo = await AsyncStorage.getItem('userInfo');
                 if (storedUserInfo) {
-                    userInfo=JSON.parse(storedUserInfo);
+                    //userInfo=JSON.parse(storedUserInfo);
+                    const fetchedUserInfo=JSON.parsed(storedUserInfo);
+                    if (fetchedUserInfo.gender) {
+                        userInfo.gender = fetchedUserInfo.gender;
+                    }
+                    if (fetchedUserInfo.dateBirth) {
+                        userInfo.dateBirth = fetchedUserInfo.dateBirth;
+                    }
+                    if (fetchedUserInfo.alcoholConsumption) {
+                        userInfo.alcoholConsumption = fetchedUserInfo.alcoholConsumption;
+                    }
+                    if (fetchedUserInfo.weeklyActivity) {
+                        userInfo.weeklyActivity = fetchedUserInfo;
+                    }
+                    if (!fetchedUserInfo.information.breastfeeding) {
+                        //dont fix this, because the value can be undefined and we dont want that, stupid JS
+                        userInfo.information.breastfeeding = false;
+                    } else {
+                        userInfo.information.breastfeeding = true;
+                    }
+                    if (!fetchedUserInfo.information.pregnant) {
+                        //dont fix this, because the value can be undefined and we dont want that, stupid JS
+                        userInfo.information.pregnant = false;
+                    } else {
+                        userInfo.information.pregnant = true;
+                    }
+                    if (!fetchedUserInfo.information.diarrhea) {
+                        //dont fix this, because the value can be undefined and we dont want that, stupid JS
+                        userInfo.information.diarrhea = false;
+                    } else {
+                        userInfo.information.diarrhea = true;
+                    }
                 }
             } catch (error) {
                 console.error('Error loading user info:', error);
@@ -58,7 +89,7 @@ function healthDetailsForm({navigation}) {
 
 
     const [value, setValue] = useState(parseInt(userInfo.gender)); //gender
-    const items = [ {label: "Male", value: 0}, {label: "Female", value: 1}]
+    const items = [ {label: "Male", value: 2}, {label: "Female", value: 1}]
     const [alcohol, setAlcohol] = useState(parseInt(userInfo.alcoholConsumption));
     const [activity, setActivity] = useState(userInfo.weeklyActivity);
 
@@ -117,7 +148,7 @@ function healthDetailsForm({navigation}) {
             <Text style={styles.attributeName}>
                 Select your Gender
             </Text>
-            <RadioForm radio_props={items} initial={0}
+            <RadioForm radio_props={items} initial={1}
                        value={value}
                        onPress={(inp) => {setValue (inp); setIsFormDirty(true);}}
                        buttonColor='black'
