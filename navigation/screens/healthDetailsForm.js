@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {View, StyleSheet, Text, ScrollView, TextInput, Pressable} from 'react-native';
-import RadioForm from 'react-native-simple-radio-button';
+import { RadioButton } from 'react-native-paper';
 import {useEffect, useState} from 'react';
 import CheckBox from "react-native-check-box";
 import Slider from "@react-native-community/slider";
@@ -8,6 +8,8 @@ import { Button } from 'react-native';
 import DatePicker from 'react-native-date-picker';
 import {Formik, useFormik} from 'formik';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useRoute} from "@react-navigation/native";
+
 
 
 
@@ -15,6 +17,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 function healthDetailsForm({navigation}) {
+
+    const [isPregnant, setIsPregnant] = useState(false);
+
+    const [isBreastfeeding, setIsBreastfeeding] = useState(false);
+
+    const [isDiarrhea, setIsDiarrhea] = useState(false);
+
+    /*const route = useRoute();*/
 
     const [isChecked, setIsChecked] = useState({
         pregnant: false,
@@ -29,8 +39,8 @@ function healthDetailsForm({navigation}) {
 
 
 
-    const [gender, setGender] = useState(1); //gender
-    const items = [ {label: "Male", value: 2}, {label: "Female", value: 1}]
+    const [gender, setGender] = useState('Male'); //gender
+    const items = [ {label: "Female", value: 1}, {label: "Male", value: 2}]
     const [alcohol, setAlcohol] = useState(3);
     const [activity, setActivity] = useState(5);
 
@@ -56,57 +66,21 @@ function healthDetailsForm({navigation}) {
                     }
                     if (!fetchedUserInfo.breastfeeding ) {
                         //don't fix this, because the value can be undefined and we dont want that, stupid JS
-                        const { breastfeeding, ...rest } = isChecked;
-                        const fetchedBreastfeeding = false;
-                        const newIsChecked = {
-                            ...rest,
-                            breastfeeding: fetchedBreastfeeding
-                        };
-                        setIsChecked(newIsChecked);
+                        setIsBreastfeeding(false);
                     } else {
-                        const { breastfeeding, ...rest } = isChecked;
-                        const fetchedBreastfeeding = true;
-                        const newIsChecked = {
-                            ...rest,
-                            breastfeeding: fetchedBreastfeeding
-                        };
-                        setIsChecked(newIsChecked);
+                        setIsBreastfeeding(true);
                     }
                     if (!fetchedUserInfo.pregnant) {
                         //don't fix this, because the value can be undefined and we dont want that, stupid JS
-                        const { pregnant, ...rest } = isChecked;
-                        const fetchedPregnant = false;
-                        const newIsChecked = {
-                            ...rest,
-                            pregnant: fetchedPregnant
-                        };
-                        setIsChecked(newIsChecked);
+                        setIsPregnant(false);
                     } else {
-                        const { pregnant, ...rest } = isChecked;
-                        const fetchedPregnant = true;
-                        const newIsChecked = {
-                            ...rest,
-                            pregnant: fetchedPregnant
-                        };
-                        setIsChecked(newIsChecked);
+                        setIsPregnant(true);
                     }
                     if (!fetchedUserInfo.diarrhea) {
                         //don't fix this, because the value can be undefined and we dont want that, stupid JS
-                        const { diarrhea, ...rest } = isChecked;
-                        const fetchedDiarrhea = false;
-                        const newIsChecked = {
-                            ...rest,
-                            diarrhea: fetchedDiarrhea
-                        };
-                        setIsChecked(newIsChecked);
+                        setIsDiarrhea(false);
                     } else {
-                        const { diarrhea, ...rest } = isChecked;
-                        const fetchedDiarrhea = true;
-                        const newIsChecked = {
-                            ...rest,
-                            diarrhea: fetchedDiarrhea
-                        };
-                        setIsChecked(newIsChecked);
+                        setIsDiarrhea(true);
                     }
                 }
             } catch (error) {
@@ -119,17 +93,6 @@ function healthDetailsForm({navigation}) {
 
 
 
-
-    function validateAlcohol(value) {
-        let error;
-        if (!value) {
-            error = "Required";
-        } else if (!/^[0-9]+(\.[0-9]+)?$/.test(value)) {
-            error = "Invalid input";
-        } else if (value < 0) {
-            error = "Please input a non-negative integer";
-        }
-    }
 
     const handleSave = async () => {
         try {
@@ -146,19 +109,20 @@ function healthDetailsForm({navigation}) {
             if (activity) {
                 updateUserInfo.weeklyActivity = activity;
             }
-            if (isChecked.pregnant) {
-                updateUserInfo.pregnant = isChecked.pregnant;
+            if (isPregnant) {
+                updateUserInfo.pregnant = isPregnant;
             }
-            if (isChecked.breastfeeding) {
-                updateUserInfo.breastfeeding = isChecked.breastfeeding;
+            if (isBreastfeeding) {
+                updateUserInfo.breastfeeding = isBreastfeeding;
             }
-            if (isChecked.diarrhea) {
-                updateUserInfo.diarrhea = isChecked.diarrhea;
+            if (isDiarrhea) {
+                updateUserInfo.diarrhea = isDiarrhea;
             }
 
             await AsyncStorage.setItem('userInfo', JSON.stringify(updateUserInfo));
             setIsFormDirty(false);
-            navigation.navigate('Health Details');
+
+            navigation.navigate('Health Details',/*{ triggerUseEffect: !route.params?.currentState }*/);
         } catch (error) {
             console.error('Error updating user info:', error);
         }
@@ -174,14 +138,16 @@ function healthDetailsForm({navigation}) {
             <Text style={styles.attributeName}>
                 Select your Gender
             </Text>
-            <RadioForm radio_props={items} initial={1}
-                       value={gender}
-                       onPress={(inp) => {setGender (inp); setIsFormDirty(true);}}
-                       buttonColor='black'
-                       labelColor= 'black'
-                       selectedButtonColor= '#19A7CE'
-                       selectedLabelColor= '#19A7CE'
-            />
+            <RadioButton.Group onValueChange={newValue => {setGender(newValue);  setIsFormDirty(true);}} value={gender}>
+                <View style={styles.buttonWithText}>
+                    <RadioButton value={'Male'} uncheckedColor='black' color='#19A7CE' status={gender=== 'Male' ? 'checked' : 'unchecked'}/>
+                    <Text  style={[styles.text, gender=== 'Male' && styles.selectedText]}>Male</Text>
+                </View>
+                <View style={styles.buttonWithText}>
+                    <RadioButton value={'Female'} uncheckedColor='black' color='#19A7CE' status={gender=== 'Female' ? 'checked' : 'unchecked'}/>
+                    <Text style={[styles.text, gender=== 'Female' && styles.selectedText]}>Female</Text>
+                </View>
+            </RadioButton.Group>
         </View>
         <View style={styles.attributeContainer}>
             <Text style={styles.attributeName}>
@@ -255,28 +221,28 @@ function healthDetailsForm({navigation}) {
             <Text style={styles.attributeName}>
                 Additional information
             </Text>
-            <CheckBox isChecked={isChecked.pregnant} onClick={() => {
-                setIsChecked({...isChecked, pregnant: !isChecked.pregnant});
+            <CheckBox isChecked={isPregnant} onClick={() => {
+                setIsPregnant(!isPregnant);
                 setIsFormDirty(true);
             }}
-            rightText="Pregnant" righTextStyle={ {color: isChecked.pregnant ? '#19A7CE' : 'black', fontSize: 19, fontWeight: "bold",} }
+            rightText="Pregnant" righTextStyle={ {color: isPregnant ? '#19A7CE' : 'black', fontSize: 19, fontWeight: "bold",} }
                       checkedCheckBoxColor= '#19A7CE'
             checkBoxColor= "black"
             >
             </CheckBox>
-            <CheckBox isChecked={isChecked.breastfeeding} onClick={() => {
-                setIsChecked({...isChecked, breastfeeding: !isChecked.breastfeeding});
+            <CheckBox isChecked={isBreastfeeding} onClick={() => {
+                setIsBreastfeeding( !isBreastfeeding);
                 setIsFormDirty(true);
             }}
-                      rightText="Breastfeeding"  righTextStyle={ {color: isChecked.breastfeeding ? '#19A7CE' : 'black', fontSize: 19, fontWeight: "bold",} }
+                      rightText="Breastfeeding"  righTextStyle={ {color: isBreastfeeding ? '#19A7CE' : 'black', fontSize: 19, fontWeight: "bold",} }
                       checkedCheckBoxColor= '#19A7CE' checkBoxColor= "black"
             >
             </CheckBox>
-            <CheckBox isChecked={isChecked.diarrhea} onClick={() => {
-                setIsChecked({...isChecked, diarrhea: !isChecked.diarrhea});
+            <CheckBox isChecked={isDiarrhea} onClick={() => {
+                setIsDiarrhea(!isDiarrhea);
                 setIsFormDirty(true);
             }}
-                      rightText="Fluid imbalance" righTextStyle={ {color: isChecked.diarrhea ? '#19A7CE' : 'black', fontSize: 19, fontWeight: "bold",} }
+                      rightText="Fluid imbalance" righTextStyle={ {color: isDiarrhea ? '#19A7CE' : 'black', fontSize: 19, fontWeight: "bold",} }
                       checkedCheckBoxColor= '#19A7CE' checkBoxColor= "black"
             >
             </CheckBox>
@@ -347,10 +313,25 @@ const styles = StyleSheet.create({
         flex: 1,
     },
 
+    text: {
+        fontSize: 20,
+        paddingTop: 8,
+        paddingBottom: 8,
+    },
+
     inputTextContainer: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'flex-start'
+    },
+
+    buttonWithText: {
+        flexDirection: "row",
+        alignItems: 'center',
+    },
+
+    selectedText: {
+        color: "#19A7CE",
     }
 
 });

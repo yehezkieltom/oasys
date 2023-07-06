@@ -17,7 +17,7 @@ import * as React from "react";
         <View style={styles.buttonS}>
             <Divider bold/>
             <View>
-                <List.Item onPress={() => console.log('App Settings pressed!')}
+                <List.Item onPress={() => navigation.navigate('App Settings')}
                            titleStyle={styles.textAppHealth} title="App Settings"
                            left={(props) => <Icon {...props}  size={35} name="cog" />}/>
             </View>

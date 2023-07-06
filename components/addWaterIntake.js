@@ -27,12 +27,12 @@ const AddWaterIntake = () => {
                         {
                             icon: 'countertop',
                             label: 'dispense water',
-                            onPress: () => navigation.navigate('Dispense Water')
+                            onPress: () => navigation.navigate('Dispense Water'),
                         },
                         {
                             icon: 'water-pump',
                             label: 'refill water tank',
-                            onPress: () => console.log('\'refill water tank\' pressed!'),
+                            onPress: () => navigation.navigate('Refill Water'),
                         },
                     ]}
                     onStateChange={onStateChange}

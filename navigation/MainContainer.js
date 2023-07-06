@@ -9,6 +9,8 @@ import userProfile from "./screens/userProfile";
 import HealthDetailsForm from "./screens/healthDetailsForm";
 import HealthDetails from "./screens/healthDetailsView";
 import NfcScreen from "./screens/nfcScreen";
+import AppSettings from "./screens/appSettings";
+import fillWaterScreen from "./screens/fillWaterScreen";
 
 const homeName = "Home";
 const profileName = "Profile";
@@ -69,8 +71,18 @@ const MainContainer = () => (
                 component={HealthDetailsForm}
             />
             <Stack.Screen
+                name='App Settings'
+                component={AppSettings}
+
+            />
+            <Stack.Screen
                 name='Dispense Water'
                 component={NfcScreen}
+                options={{ headerShown: false }}
+            />
+            <Stack.Screen
+                name='Refill Water'
+                component={fillWaterScreen}
                 options={{ headerShown: false }}
             />
 

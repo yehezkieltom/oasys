@@ -2,6 +2,7 @@ import {Button, Text, StyleSheet, View, Pressable} from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import {useEffect, useState} from 'react';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {useRoute} from "@react-navigation/native";
 
 function healthDetailsView({navigation}) {
 
@@ -14,8 +15,11 @@ function healthDetailsView({navigation}) {
         breastfeeding: false,
         diarrhea: false,}
     );
+    const [triggerReload, setTriggerReload] = useState(false);
+    /*const route = useRoute();*/
+    /*setTriggerReload( route.params?.triggerUseEffect);*/
 
-    function setRealGender (number) {
+    /*function setRealGender (number) {
         let name;
         if (number=== 2) {
             name = 'Male';
@@ -23,7 +27,7 @@ function healthDetailsView({navigation}) {
             name = 'Female';
         }
         return name;
-    }
+    }*/
 
     function setRealActivity (number) {
         let name;
@@ -43,6 +47,23 @@ function healthDetailsView({navigation}) {
 
     const [userInfo, setUserInfo] = useState();
 
+    function finalString( ) {
+        let information =  '';
+        if (userInfo && userInfo.pregnant ) {
+            information = information + 'Pregnant \n';
+        }
+        if (userInfo && userInfo.breastfeeding ) {
+            information = information + 'Breastfeeding \n';
+        }
+        if (userInfo && userInfo.diarrhea ) {
+            information = information + 'Fluid imbalance';
+        }
+        return information;
+
+    }
+
+
+
     useEffect(() => {
         const loadUserInfo = async () => {
             try {
@@ -56,7 +77,8 @@ function healthDetailsView({navigation}) {
         };
 
         loadUserInfo();
-    }, []);
+        return () => {setTriggerReload(false)}
+    }, [triggerReload]);
 
 
 
@@ -69,7 +91,7 @@ function healthDetailsView({navigation}) {
                         Gender
                     </Text>
                     <Text style={styles.inputName}>
-                        {userInfo && setRealGender(userInfo.gender)}
+                        {userInfo && userInfo.gender}
                     </Text>
                 </View>
                 <View style={styles.oneAttribute}>
@@ -101,19 +123,20 @@ function healthDetailsView({navigation}) {
                         additional details
                     </Text>
                     <Text style={styles.inputName}>
-                        {userInfo && userInfo.pregnant && 'Pregnant'}
-                    </Text>
-                    <Text style={styles.inputName}>
-                        {userInfo && userInfo.breastfeeding && 'Breastfeeding'}
-                    </Text>
-                    <Text style={styles.inputName}>
-                        {userInfo && userInfo.diarrhea && 'Fluid imbalance'}
+                        {finalString()}
                     </Text>
                 </View>
                 <View>
-                    <Pressable onPress={() => navigation.navigate('Health Details Form')}>
+                    <Pressable onPress={() => navigation.navigate('Health Details Form', {/*{currentState: triggerReload}*/})}>
                         <Text style={styles.editButton}>
                             edit details
+                        </Text>
+                    </Pressable>
+                </View>
+                <View>
+                    <Pressable onPress={() => setTriggerReload(true) }>
+                        <Text style={styles.editButton}>
+                            reload
                         </Text>
                     </Pressable>
                 </View>
