@@ -1,21 +1,14 @@
 import {ImageBackground, StyleSheet, Text, View} from "react-native";
 import {Provider} from "react-native-paper";
+//import {NativeModules} from 'react-native';
 
 import AddWaterIntake from "../../components/addWaterIntake";
 import StockImage from "../../assets/successful-man-giving-glass-water-600w-444674071.webp";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const clearAll = async () => {
-    try {
-        await AsyncStorage.clear()
-    } catch(e) {
-        // clear error
-    }
+//const {MyNativeModule} = NativeModules;
 
-    console.log('Done.')
-}
 const HomeScreen = () => {
-    // clearAll();
+//    MyNativeModule.showToast("Hello from Native Module!");
     return (
         <Provider>
             <View style={styles.fullScreenView}>

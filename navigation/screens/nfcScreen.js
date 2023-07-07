@@ -1,41 +1,41 @@
-import {Button, Pressable, StyleSheet, Text, TextInput, TouchableHighlight, TouchableOpacity, View} from "react-native";
-import {Divider, List} from "react-native-paper";
+import {StyleSheet, Text, View} from "react-native";
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import * as React from "react";
-import NfcManager, { NfcEvents, NfcTech } from 'react-native-nfc-manager';
-import {useState, useEffect} from "react";
-// import { HCESession, NFCTagType4NDEFContentType, NFCTagType4 } from 'react-native-hce';
+import NfcManager, {NfcTech}from 'react-native-nfc-manager';
+// import {useState, useEffect} from "react";
+// import {NativeModules} from 'react-native';
 
-// let session;
+NfcManager.start();
 //
-// const startSession = async () => {
-//     const tag = new NFCTagType4({
-//         type: NFCTagType4NDEFContentType.Text,
-//         content: "Hello world",
-//         writable: true
-//     });
-//
-//     session = await HCESession.getInstance();
-//     await session.setApplication(tag);
-//     await session.setEnabled(true);
-// }
+const readTag = async () => {
+    let mifarePages = [];
 
-//NfcManager.start();
+   try {
+        let reqMifare = await NfcManager.requestTechnology(NfcTech.MifareUltralight);
 
-//const readTag = async () => {
-//    try {
-//        await NfcManager.requestTechnology(NfcTech.Ndef);
-//        const tag = await NfcManager.getTag();
-//        console.warn("Tag found!", tag);
-//    } catch (ex) {
-//        console.warn("Oops!", ex);
-//    } finally {
-//        NfcManager.cancelTechnologyRequest
-//    }
-//}
+        const readLength = 60;
+        const mifarePagesRead = await Promise.all(
+            [...Array(readLength).keys()].map(async (_, i) => {
+                const pages = await NfcManager.mifareUltralightHandlerAndroid
+                    .mifareUltralightReadPages(i * 4);
+                mifarePages.push(pages);
+            }),
+        );
+   } catch (ex) {
+       console.warn("Oops!", ex);
+   } finally {
+       await NfcManager.cancelTechnologyRequest();
+   }
+
+   console.info(mifarePages);
+}
+
+// const { HostCardEmulationModule } = NativeModules;
 
 function nfcScreen({navigation}) {
 //    readTag();
+//     HostCardEmulationModule.enableHCE();
+
     return (
         <View style={styles.wholeScreen}>
             <Text style={styles.title}>
