@@ -18,7 +18,18 @@ const AddWaterIntake = () => {
                     visible
                     color='#fff'
                     icon={open ? 'close' : 'plus' }
+                    label='consume water'
                     actions={[
+                        {
+                            icon: 'clipboard-arrow-down',
+                            label: 'retrieve record',
+                            onPress: () => {
+                                navigation.navigate('NFC Screen', {
+                                    operationMode: 2,
+                                    desiredSetting: 0
+                                });
+                            }
+                        },
                         {
                             icon: 'cup',
                             label: 'add manually',

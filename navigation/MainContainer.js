@@ -5,12 +5,13 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import HomeScreen from './screens/HomeScreen';
-import userProfile from "./screens/userProfile";
-import HealthDetailsForm from "./screens/healthDetailsForm";
-import HealthDetails from "./screens/healthDetailsView";
-import NfcScreen from "./screens/nfcScreen";
-import AppSettings from "./screens/appSettings";
-import fillWaterScreen from "./screens/fillWaterScreen";
+import UserProfile from "./screens/UserProfile";
+import HealthDetailsForm from "./screens/HealthDetailsForm";
+import HealthDetails from "./screens/HealthDetailsView";
+import NfcScreen from "./screens/NfcScreen";
+import AppSettings from "./screens/AppSettings";
+import FillWaterScreen from "./screens/FillWaterScreen";
+import DispenseWater from "./screens/DispenseWater";
 
 const homeName = "Home";
 const profileName = "Profile";
@@ -49,7 +50,7 @@ const Root = () => (
             tabBarShowLabel: false
         })}>
         <Tab.Screen name={homeName} component={HomeScreen} options={{ headerShown: false }} />
-        <Tab.Screen name={profileName} component={userProfile} options={{ headerShown: false }}/>
+        <Tab.Screen name={profileName} component={UserProfile} options={{ headerShown: false }}/>
     </Tab.Navigator>
 )
 
@@ -77,13 +78,18 @@ const MainContainer = () => (
             />
             <Stack.Screen
                 name='Dispense Water'
-                component={NfcScreen}
+                component={DispenseWater}
                 options={{ headerShown: false }}
             />
             <Stack.Screen
                 name='Refill Water'
-                component={fillWaterScreen}
+                component={FillWaterScreen}
                 options={{ headerShown: false }}
+            />
+            <Stack.Screen
+                name='NFC Screen'
+                component={NfcScreen}
+                options={{headerShown: false}}
             />
 
         </Stack.Navigator>

@@ -4,7 +4,7 @@ import {useEffect, useState} from 'react';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {useRoute} from "@react-navigation/native";
 
-function healthDetailsView({navigation}) {
+function HealthDetailsView({navigation}) {
 
     const [gender, setGender] = useState('female');
     const [dateOfBirth, setDateOfBirth] = useState(new Date('2000-01-01'));
@@ -146,7 +146,7 @@ function healthDetailsView({navigation}) {
 
 }
 
-export default healthDetailsView;
+export default HealthDetailsView;
 
 const styles= StyleSheet.create ({
 

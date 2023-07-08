@@ -16,7 +16,7 @@ import {useRoute} from "@react-navigation/native";
 
 
 
-function healthDetailsForm({navigation}) {
+function HealthDetailsForm({navigation}) {
 
     const [isPregnant, setIsPregnant] = useState(false);
 
@@ -64,7 +64,7 @@ function healthDetailsForm({navigation}) {
                     if (fetchedUserInfo.weeklyActivity) {
                         setActivity(fetchedUserInfo.weeklyActivity);
                     }
-                    if (!fetchedUserInfo.breastfeeding ) {
+                    if (!fetchedUserInfo.breastfeeding) {
                         //don't fix this, because the value can be undefined and we dont want that, stupid JS
                         setIsBreastfeeding(false);
                     } else {
@@ -255,9 +255,9 @@ function healthDetailsForm({navigation}) {
     )
 
 }
-healthDetailsForm.title = 'Health Details';
+HealthDetailsForm.title = 'Health Details';
 
-export default healthDetailsForm;
+export default HealthDetailsForm;
 
 const styles = StyleSheet.create({
 

@@ -1,13 +1,13 @@
 {
   "name": "oasys",
   "version": "1.0.0",
-  "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start --dev-client",
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",
-    "postinstall": "patch-package"
+    "postinstall": "patch-package",
+    "eject": "expo eject"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.17.11",
@@ -20,6 +20,7 @@
     "expo-dev-client": "~2.2.1",
     "expo-splash-screen": "~0.18.2",
     "expo-status-bar": "~1.4.4",
+    "expo-system-ui": "^2.4.0",
     "formik": "^2.4.2",
     "patch-package": "^7.0.0",
     "react": "18.2.0",
@@ -28,7 +29,6 @@
     "react-native-date-picker": "^4.2.13",
     "react-native-elements": "^3.4.3",
     "react-native-gesture-handler": "~2.9.0",
-    "react-native-hce": "^0.2.0",
     "react-native-nfc-manager": "^3.14.5",
     "react-native-paper": "^5.8.0",
     "react-native-reanimated": "~2.14.4",

@@ -6,14 +6,11 @@ import { Button } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
-function appSettings({navigation}) {
+function AppSettings({navigation}) {
 
-    const [water, setWater] = useState('100 ML');
+    const [water, setWater] = useState(1);
 
     const [isFormDirty, setIsFormDirty] = useState(false);
-
-    const items = [ {label: "100 ML", value: 1}, {label: "200 ML", value: 2}, {label: "300 ML", value: 3},
-                                              {label: "500 ML", value: 5}, {label: "700 ML", value: 7}, {label: "1000 ML", value: 10}];
 
     useEffect(() => {
         const loadUserInfo = async () => {
@@ -63,28 +60,28 @@ function appSettings({navigation}) {
                     </Text>
                     <RadioButton.Group onValueChange={newValue => {setWater(newValue);  setIsFormDirty(true);}} value={water}>
                         <View style={styles.buttonWithText}>
-                            <RadioButton value="first" uncheckedColor='black' color='#19A7CE' status={water=== 'first' ? 'checked' : 'unchecked'}/>
-                            <Text style={[styles.text, water=== 'first' && styles.selectedText]} >100 ML</Text>
+                            <RadioButton value={1} uncheckedColor='black' color='#19A7CE' status={water === 1 ? 'checked' : 'unchecked'}/>
+                            <Text style={[styles.text, water === 1 && styles.selectedText]} >100 ML</Text>
                         </View>
                         <View style={styles.buttonWithText}>
-                            <RadioButton value="second" uncheckedColor='black' color='#19A7CE' status={water=== 'second' ? 'checked' : 'unchecked'}/>
-                            <Text style={[styles.text, water=== 'second' && styles.selectedText]}>200 ML</Text>
+                            <RadioButton value={2} uncheckedColor='black' color='#19A7CE' status={water === 2 ? 'checked' : 'unchecked'}/>
+                            <Text style={[styles.text, water === 2 && styles.selectedText]}>200 ML</Text>
                         </View>
                         <View style={styles.buttonWithText}>
-                            <RadioButton value="third" uncheckedColor='black' color='#19A7CE' status={water=== 'third' ? 'checked' : 'unchecked'}/>
-                            <Text style={[styles.text, water=== 'third' && styles.selectedText]}>300 ML</Text>
+                            <RadioButton value={3} uncheckedColor='black' color='#19A7CE' status={water === 3 ? 'checked' : 'unchecked'}/>
+                            <Text style={[styles.text, water === 3 && styles.selectedText]}>300 ML</Text>
                         </View>
                         <View style={styles.buttonWithText}>
-                            <RadioButton value="fifth" uncheckedColor='black' color='#19A7CE' status={water=== 'fifth' ? 'checked' : 'unchecked'}/>
-                            <Text style={[styles.text, water=== 'fifth' && styles.selectedText]}>500 ML</Text>
+                            <RadioButton value={4} uncheckedColor='black' color='#19A7CE' status={water === 4 ? 'checked' : 'unchecked'}/>
+                            <Text style={[styles.text, water === 4 && styles.selectedText]}>500 ML</Text>
                         </View>
                         <View style={styles.buttonWithText}>
-                            <RadioButton value="seventh" uncheckedColor='black' color='#19A7CE' status={water=== 'seventh' ? 'checked' : 'unchecked'}/>
-                            <Text style={[styles.text, water=== 'seventh' && styles.selectedText]}>700 ML</Text>
+                            <RadioButton value={5} uncheckedColor='black' color='#19A7CE' status={water === 5 ? 'checked' : 'unchecked'}/>
+                            <Text style={[styles.text, water === 5 && styles.selectedText]}>700 ML</Text>
                         </View>
                         <View style={styles.buttonWithText}>
-                            <RadioButton value="tenth" uncheckedColor='black' color='#19A7CE' status={water=== 'tenth' ? 'checked' : 'unchecked'}/>
-                            <Text style={[styles.text, water=== 'tenth' && styles.selectedText]}>1000 ML</Text>
+                            <RadioButton value={6} uncheckedColor='black' color='#19A7CE' status={water === 6 ? 'checked' : 'unchecked'}/>
+                            <Text style={[styles.text, water === 6 && styles.selectedText]}>1000 ML</Text>
                         </View>
                     </RadioButton.Group>
                 </View>
@@ -97,9 +94,9 @@ function appSettings({navigation}) {
     )
 
 }
-appSettings.title = 'App Settings';
+AppSettings.title = 'App Settings';
 
-export default appSettings;
+export default AppSettings;
 
 const styles = StyleSheet.create({
 

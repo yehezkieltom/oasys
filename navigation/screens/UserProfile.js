@@ -8,7 +8,7 @@ import * as React from "react";
 
 
 
- function userProfile({navigation}) {
+ function UserProfile({navigation}) {
     return (
      <View style={styles.wholeScreen}>
         <View style={styles.logoScreen}>
@@ -36,7 +36,7 @@ import * as React from "react";
     )
 }
 
-export default userProfile;
+export default UserProfile;
 const styles= StyleSheet.create ( {
 
     innerText: {
