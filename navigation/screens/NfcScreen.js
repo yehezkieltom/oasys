@@ -90,7 +90,7 @@ function NfcScreen({route, navigation}) {
             let reqMifare = await NfcManager.requestTechnology(NfcTech.MifareUltralight);
 
             const auth = [4, 101, 21, 69];
-            const message = [useCase, arduinoImplementationSetting, 0, 0];
+            const message = [useCase, arduinoImplementationSetting, 2, 0];
             console.log(`Trying to write [${message}] onto page 5`)
 
             await NfcManager.mifareUltralightHandlerAndroid

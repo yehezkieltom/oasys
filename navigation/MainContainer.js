@@ -12,6 +12,7 @@ import NfcScreen from "./screens/NfcScreen";
 import AppSettings from "./screens/AppSettings";
 import FillWaterScreen from "./screens/FillWaterScreen";
 import DispenseWater from "./screens/DispenseWater";
+import ManualAddWater from "./screens/ManualAddWater";
 
 const homeName = "Home";
 const profileName = "Profile";
@@ -60,6 +61,11 @@ const MainContainer = () => (
             <Stack.Screen
                 name='Root'
                 component={Root}
+                options={{ headerShown: false }}
+            />
+            <Stack.Screen
+                name='Manual Add Water'
+                component={ManualAddWater}
                 options={{ headerShown: false }}
             />
             <Stack.Screen

@@ -4,10 +4,8 @@ import * as React from "react";
 import {useEffect, useState} from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-function DispenseWater({navigation}) {
-//    readTag();
-
-    const [counter, setCounter] = useState(0); //pointer to preset
+function ManualAddWater({navigation}) {
+    const [counter, setCounter] = useState(0);
     const dispenserPreset = [100, 200, 300, 500, 700, 1000]
 
     const getDefaultValue = async () => {
@@ -23,6 +21,39 @@ function DispenseWater({navigation}) {
             console.warn("Unexpected error while fetching async storage: " + e);
         }
     }
+
+    const handleSave = async (v) => {
+        let updatedWaterProgress = 0;
+        try {
+            const storedWaterProgress = await AsyncStorage.getItem(new Date(Date.now())
+                .toLocaleString('de',{
+                    year: 'numeric',
+                    month: 'numeric',
+                    day: 'numeric'
+                }));
+            if (storedWaterProgress) {
+                const fetchedWaterProgress = JSON.parse(storedWaterProgress);
+                updatedWaterProgress = fetchedWaterProgress.waterProgress;
+            }
+        } catch (e) {
+            console.warn("Unexpected Error occurred while fetching water progress to AsyncStorage: " + e);
+        }
+        const updateWaterProgress = {
+            waterProgress: updatedWaterProgress + dispenserPreset[v],
+        }
+        try {
+            await AsyncStorage.setItem(
+                new Date(Date.now())
+                    .toLocaleString('de',{
+                        year: 'numeric',
+                        month: 'numeric',
+                        day: 'numeric'
+                    }), JSON.stringify(updateWaterProgress));
+        } catch (e) {
+            console.warn("Unexpected Error occurred while storing water progress to AsyncStorage: " + e);
+        }
+
+    };
 
     const incrementCounter = () => {
         // await AsyncStorage.setItem('@count', (counter + 1).toString());
@@ -41,7 +72,7 @@ function DispenseWater({navigation}) {
     return (
         <View style={styles.wholeScreen}>
             <Text style={styles.title}>
-                Water output
+                Add manually
             </Text>
             <Text style={styles.numberScreen}>{dispenserPreset[counter]} ml</Text>
             <View style={styles.button}>
@@ -69,10 +100,8 @@ function DispenseWater({navigation}) {
                 </Pressable>
             </View>
             <Pressable onPress={()=> {
-                navigation.navigate('NFC Screen', {
-                    operationMode: 0,
-                    desiredSetting: counter
-                });
+                handleSave(counter).then(r =>
+                    navigation.navigate('Home'));
             }}>
                 <Text style={styles.doneButton}>
                     done
@@ -82,7 +111,7 @@ function DispenseWater({navigation}) {
     )
 }
 
-export default DispenseWater;
+export default ManualAddWater;
 
 const styles= StyleSheet.create ({
     minusStyle:{

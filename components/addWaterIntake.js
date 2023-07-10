@@ -33,7 +33,7 @@ const AddWaterIntake = () => {
                         {
                             icon: 'cup',
                             label: 'add manually',
-                            onPress: () => console.log('\'add manually\' pressed!'),
+                            onPress: () => navigation.navigate('Manual Add Water'),
                         },
                         {
                             icon: 'countertop',

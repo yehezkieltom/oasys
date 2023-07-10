@@ -7,7 +7,7 @@ import {useRoute} from "@react-navigation/native";
 function HealthDetailsView({navigation}) {
 
     const [gender, setGender] = useState('female');
-    const [dateOfBirth, setDateOfBirth] = useState(new Date('2000-01-01'));
+    const [dateOfBirth, setDateOfBirth] = useState(new Date('1999-07-08'));
     const [alcohol, setAlcohol] = useState(3.0);
     const [activity, setActivity] = useState('moderate');
     const [isChecked, setIsChecked] = useState({
