@@ -48,6 +48,22 @@ function AppSettings({navigation}) {
         }
     };
 
+    const nukeWaterProgress = async () => {
+        const emptyWaterProgress = {
+            waterProgress: 0
+        }
+        try {
+            await AsyncStorage.setItem(new Date(Date.now())
+                .toLocaleString('de',{
+                    year: 'numeric',
+                    month: 'numeric',
+                    day: 'numeric'
+                }), JSON.stringify(emptyWaterProgress));
+        } catch (e) {
+            console.warn("Error occurred while nuking today's water progress: " + e);
+        }
+    }
+
     return (
         <View style={styles.container}>
             {/*<View style={styles.logoScreen}>*/}
@@ -86,6 +102,7 @@ function AppSettings({navigation}) {
                     </RadioButton.Group>
                 </View>
                 <Button title="Save" onPress={handleSave} disabled={!isFormDirty} />
+                <Button title="Nuke Water Progress" onPress={nukeWaterProgress} />
 
             </ScrollView>
 

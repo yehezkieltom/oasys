@@ -64,7 +64,7 @@ function FillWaterScreen({navigation}) {
             <Pressable onPress={()=> {
                 navigation.navigate('NFC Screen', {
                     operationMode: 1,
-                    desiredSetting: counter,
+                    desiredSetting: Math.round(counter * 10),
                 });
             }}>
                 <Text style={styles.doneButton}>

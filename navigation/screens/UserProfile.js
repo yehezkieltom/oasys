@@ -30,7 +30,6 @@ import * as React from "react";
             <Divider bold/>
 
 
-
         </View>
      </View>
     )

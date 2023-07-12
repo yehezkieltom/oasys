@@ -11,7 +11,6 @@ function NfcScreen({route, navigation}) {
     let retrievedRecord;
     let currentProgress;
     const firstUpdateGoHome = useRef(true);
-    // const firstUpdateSaveRetRec = useRef(true);
     const config = [route.params.operationMode, route.params.desiredSetting];
     console.log(config);
 
@@ -60,27 +59,28 @@ function NfcScreen({route, navigation}) {
         const [useCase, desiredSetting] = data;
         let arduinoImplementationSetting;
         if (useCase === 0) {
-            switch (desiredSetting) {
-                case 0:
-                    arduinoImplementationSetting = 1;
-                    break;
-                case 1:
-                    arduinoImplementationSetting = 2;
-                    break;
-                case 2:
-                    arduinoImplementationSetting = 3;
-                    break;
-                case 3:
-                    arduinoImplementationSetting = 5;
-                    break;
-                case 4:
-                    arduinoImplementationSetting = 7;
-                    break;
-                case 5:
-                    arduinoImplementationSetting = 10;
-            }
+            arduinoImplementationSetting = Math.round(desiredSetting);
+            // switch (desiredSetting) {
+            //     case 0:
+            //         arduinoImplementationSetting = 1;
+            //         break;
+            //     case 1:
+            //         arduinoImplementationSetting = 2;
+            //         break;
+            //     case 2:
+            //         arduinoImplementationSetting = 3;
+            //         break;
+            //     case 3:
+            //         arduinoImplementationSetting = 5;
+            //         break;
+            //     case 4:
+            //         arduinoImplementationSetting = 7;
+            //         break;
+            //     case 5:
+            //         arduinoImplementationSetting = 10;
+            // }
         } else if (useCase === 1) {
-            arduinoImplementationSetting = desiredSetting * 10;//convert from L to dL
+            arduinoImplementationSetting = desiredSetting;//convert from L to dL, not anymore the converting done by fill water screen
         } else {
             await NfcManager.cancelTechnologyRequest();
             setDidOperation(true);
@@ -90,7 +90,9 @@ function NfcScreen({route, navigation}) {
             let reqMifare = await NfcManager.requestTechnology(NfcTech.MifareUltralight);
 
             const auth = [4, 101, 21, 69];
-            const message = [useCase, arduinoImplementationSetting, 2, 0];
+            const message = [useCase, arduinoImplementationSetting, 0, 0];
+            console.log(`useCase = ${useCase}`);
+            console.log(`arduinoImplementationSetting = ${arduinoImplementationSetting}`);
             console.log(`Trying to write [${message}] onto page 5`)
 
             await NfcManager.mifareUltralightHandlerAndroid
@@ -117,6 +119,14 @@ function NfcScreen({route, navigation}) {
                     mifarePages.push(pages);
                 }),
             );
+
+            // const auth = [4, 101, 21, 69];
+            const message = [mifarePages[1][4], mifarePages[1][5], 0, 0];
+            console.log(`Whole Card: ${mifarePages[1]}` )
+            console.log(`Trying to write [${message}] onto page 5`)
+
+            await NfcManager.mifareUltralightHandlerAndroid
+                .mifareUltralightWritePage(5, message);
         } catch (ex) {
             console.warn("Oops!", ex);
         } finally {
@@ -188,7 +198,7 @@ function NfcScreen({route, navigation}) {
     return (
         <View style={styles.wholeScreen}>
             <Text style={styles.title}>
-                Hold near reader
+                Hold card near phone
             </Text>
             <Icon style={styles.iconStyle}
                 name='contactless'

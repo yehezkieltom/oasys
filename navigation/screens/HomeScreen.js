@@ -16,7 +16,7 @@ const HomeScreen = () => {
     const [dateOfBirth, setDateOfBirth] = useState(new Date(Date.now()));
     const [gender, setGender] = useState(null);
     const [breastfeeding, setBreastfeeding] = useState(false);
-    const [pregnant, setPregnant] = useState(false);
+    const [pregnant, setPregnant] = useState(true);
     const [diarrhea, setDiarrhea] = useState(false);
     const [reloadCount, setReloadCount] = useState(0);
     const [reloadTrigger, setReloadTrigger] = useState(false);
@@ -107,7 +107,7 @@ const HomeScreen = () => {
                     calculatedDailyGoal += 1182; //ml
                 }
                 //interpolate the daily goal to the current hours of the day
-                const currentHour = currentTime.getHours() === 0 ? 1 : currentTime.getHours();
+                const currentHour = (currentTime.getHours() === 0 ? 1 : currentTime.getHours()) + ((currentTime.getMinutes() >= 30 && currentTime.getHours() > 0) ? 0.5 : 0);
                 setCurrentGoal(Math.round(calculatedDailyGoal*(currentHour/24)));
 
             }).then(() => loadWaterProgress());
